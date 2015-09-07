@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>
+			Some Title
+		</title>
+		<meta name = "viewport" content = "width = 640, height = 480, initial-scale = 1">
+		<link rel = "stylesheet" type = "text/css" href = "mainStyle.css">
+		<script src = "three.min.js"></script>
+	</head>
+	<body>
+		<div id = "containerDiv">
+			<div id = "titleBarDiv">
+				Sketch-CAD
+			</div>
+			<div id = "menuBarDiv">
+				<button id = "save_butt">Save</button>
+				<button id = "load_butt">Load</button>
+				<button id = "left_rot_butt">Rotate Left</button>
+				<button id = "right_rot_butt">Rotate Right</button>
+				<button id = "up_butt">Scale Up</button>
+				<button id = "down_butt">Scale Down</button>
+				<button id = "move_shape_butt">Move Shape to -></button>
+				<input  id = "x_input" type = "text" name = "x_coordinate" value = "x">
+				<input  id = "y_input" type = "text" name = "y_coordinate" value = "y">
+				<input  id = "z_input" type = "text" name = "z_coordinate" value = "z">
+			</div>
+			<div id = "leftSideBarDiv">
+				<select>
+					<option value = "Cube">Cube</option>
+					<option value = "Sphere">Sphere</option>
+				</select>
+				<button id = "place_butt">Place Shape</button>
+				Some stuff is going to go here like the color picker and movement arrows.
+			</div>
+			<div id = "WebGLCanvas"> 
+				<script src = "cube.js"></script>
+			</div>
+			<div id = "rightSideBarDiv">
+				Some stuff is going to go here like shape creation and camera controls.
+			</div>
+		</div>
+	</body>
+</html
+	
+			
