@@ -8,6 +8,7 @@
 		<link rel = "stylesheet" type = "text/css" href = "mainStyle.css">
 		<script src = "three.min.js"></script>
 	</head>
+
 	<body>
 		<div id = "containerDiv">
 			<div id = "titleBarDiv">
@@ -26,11 +27,18 @@
 				<input  id = "z_input" type = "text" name = "z_coordinate" value = "z">
 			</div>
 			<div id = "leftSideBarDiv">
-				<select>
+				<select id = 'shapeSelector'>
 					<option value = "Cube">Cube</option>
 					<option value = "Sphere">Sphere</option>
+					<option value = "Cylinder">Cylinder</option>
+					<option value = "Plane">Plane</option>
 				</select>
 				<button id = "place_butt">Place Shape</button>
+				Select shape to edit:
+				<select id = "meshSelector">
+
+				</select>
+
 				Some stuff is going to go here like the color picker and movement arrows.
 			</div>
 			<div id = "WebGLCanvas"> 
@@ -41,6 +49,6 @@
 			</div>
 		</div>
 	</body>
-</html
+</html>
 	
 			
