@@ -20,17 +20,32 @@ function rebuildDropDown() {
 
 function init() {
 	scene = new THREE.Scene();
-	mouse = new THREE.Vector3();
-	projector = new THREE.Projector();
 	meshes = {};
+	var width = window.innerWidth * .6;
+	var height = 750;
+	this.aspRatio = width / height;
+	this.viewLength = 1000;
+	this.renderer = new THREE.WebGLRenderer();
+	this.renderer.setSize(width, height);
 
-	camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 10000 );
-	camera.position.z = 1000;
+	// The origin of our scene starts at the center of the screen and goes
+	// viewLength / 2 in all directions
+	this.camera = new THREE.OrthographicCamera(
+		-this.aspRatio * this.viewLength / 2,
+		this.aspRatio * this.viewLength / 2,
+		this.viewLength / 2, -this.viewLength / 2, -1000, 1000
+	);
+	this.camera.z = 0;
 
-	renderer = new THREE.WebGLRenderer();
-	renderer.setSize( window.innerWidth, window.innerHeight );
+	var element = document.getElementById("WebGLCanvas");
 
-	document.getElementById("WebGLCanvas").appendChild(renderer.domElement);
+	// We use || in case the element with the id passed in doesn't exist
+	(element || document.body).appendChild(this.renderer.domElement);
+
+	this.renderScene = function() {
+		requestAnimationFrame(self.renderScene);
+		self.renderer.render(self.scene, self.camera);
+	};
 }
 
 function render() {
