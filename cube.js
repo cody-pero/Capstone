@@ -11,14 +11,15 @@ init();
 render();
 
 function rebuildDropDown() {
+
 	var selectBox = document.getElementById('meshSelector');
-	for(var i = 0; i<selectBox.length; i++){
-		selectBox.options[i] = null;
+	selectBox.options.length = 0;
+	for (var key in meshes) {
+		var option = document.createElement("option");
+		option.text = key;
+		option.value = key;
+		selectBox.add(option);
 	}
-	var option = document.createElement("option");
-	option.text = mesh.name2;
-	option.value = mesh.name2;
-	selectBox.add(option);
 }
 
 function init() {
@@ -145,9 +146,9 @@ document.getElementById('meshSelector').onclick = function() {
 		}
 		// Delete button code
 		document.getElementById('delete_butt').onclick = function() {
-			mesh = meshes[document.getElementById('meshSelector').value];
-			delete meshes[document.getElementById('meshSelector').value]
-			scene.remove(mesh);
+			var selectedMesh = meshes[document.getElementById('meshSelector').value];
+			scene.remove(selectedMesh);
+			delete meshes[selectedMesh.name2];
 			rebuildDropDown();
 			render();
 		}
