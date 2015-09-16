@@ -7,6 +7,7 @@
 		<meta name = "viewport" content = "width = 640, height = 480, initial-scale = 1">
 		<link rel = "stylesheet" type = "text/css" href = "mainStyle.css">
 		<script src = "three.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 	</head>
 
 	<body>
@@ -17,28 +18,24 @@
 			<div id = "menuBarDiv">
 				<button id = "save_butt">Save</button>
 				<button id = "load_butt">Load</button>
-				<button id = "left_rot_butt">Rotate Left</button>
-				<button id = "right_rot_butt">Rotate Right</button>
-				<button id = "up_butt">Scale Up</button>
-				<button id = "down_butt">Scale Down</button>
-				<button id = "move_shape_butt">Move Shape to -></button>
-				<input  id = "x_input" type = "text" name = "x_coordinate" value = "x">
-				<input  id = "y_input" type = "text" name = "y_coordinate" value = "y">
-				<input  id = "z_input" type = "text" name = "z_coordinate" value = "z">
 			</div>
 			<div id = "leftSideBarDiv">
-				<select id = 'shapeSelector'>
+				<label>Select Shape Geometry</label>
+				<select id = 'shapeSelector'  >
 					<option value = "Cube">Cube</option>
 					<option value = "Sphere">Sphere</option>
 					<option value = "Cylinder">Cylinder</option>
 					<option value = "Plane">Plane</option>
 				</select>
 				<button id = "place_butt">Place Shape</button>
-				Select shape to edit:
-				<select id = "meshSelector">
+				<label>Scene Elements</label>
+				<select id = "meshSelector" size = "2">
 
 				</select>
+				<div id = "editorDiv">
+					<label>Selected Object settings</label>
 
+				</div>
 				Some stuff is going to go here like the color picker and movement arrows.
 			</div>
 			<div id = "WebGLCanvas"> 

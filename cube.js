@@ -21,8 +21,8 @@ function rebuildDropDown() {
 function init() {
 	scene = new THREE.Scene();
 	meshes = {};
-	var width = window.innerWidth * .6;
-	var height = 750;
+	var width = window.innerWidth * .8;
+	var height = window.innerHeight * .9;
 	this.aspRatio = width / height;
 	this.viewLength = 1000;
 	this.renderer = new THREE.WebGLRenderer();
@@ -35,7 +35,7 @@ function init() {
 		this.aspRatio * this.viewLength / 2,
 		this.viewLength / 2, -this.viewLength / 2, -1000, 1000
 	);
-	this.camera.z = 0;
+	this.camera.z = 1000;
 
 	var element = document.getElementById("WebGLCanvas");
 
@@ -78,6 +78,49 @@ document.getElementById('place_butt').onclick = function() {
 	// Repopulates the selectMesh dropdown list with the new mesh name
 	rebuildDropDown();
 	render();
+}
+document.getElementById('meshSelector').onclick = function() {
+	mesh = meshes[document.getElementById('meshSelector').value];
+	if (mesh.geometry instanceof THREE.BoxGeometry) {
+		$(document).ready(function() {
+			$("#editorDiv").append(
+				'<button id = "left_rot_butt" class = "toolbar_butt">Rotate Left</button>' +
+				'<button id = "right_rot_butt" class = "toolbar_butt">Rotate Right</button>' +
+				'<button id = "up_rot_butt" class = "toolbar_butt">Rotate Up</button>' +
+				'<button id = "down_rot_butt" class = "toolbar_butt">Rotate Down</button>' +
+				'<button id = "move_forward_butt" class = "toolbar_butt">Move Forward</button>' +
+				'<button id = "move_back_butt" class = "toolbar_butt">Move Back</button>' +
+				'<button id = "move_up_butt" class = "toolbar_butt">Move Up</button>' +
+				'<button id = "move_down_butt" class = "toolbar_butt">Move Down</button>' +
+				'<button id = "move_left_butt" class = "toolbar_butt">Move Left</button>' +
+				'<button id = "move_right_butt" class = "toolbar_butt">Move Right</button>' +
+				'<button id = "scale_up_butt" class = "toolbar_butt">Scale Up</button>' +
+				'<button id = "scale_down_butt" class = "toolbar_butt">Scale Down</button>' +
+				'<label class = "toolbar_label">X position</label>' +
+				'<input  id = "x_input" class = "toolbar_input" type = "text" name = "x_coordinate" value = "x">' +
+				'<label class = "toolbar_label">Y position</label>' +
+				'<input  id = "y_input" class = "toolbar_input" type = "text" name = "y_coordinate" value = "y">' +
+				'<label class = "toolbar_label">Z position</label>' +
+				'<input  id = "z_input" class = "toolbar_input" type = "text" name = "z_coordinate" value = "z">' +
+				'<label class = "toolbar_label">X rotation</label>' +
+				'<input  id = "x_rot_input" class = "toolbar_input" type = "text" name = "x_rotation" value = "x">' +
+				'<label class = "toolbar_label">Y rotation</label>' +
+				'<input  id = "y_rot_input" class = "toolbar_input" type = "text" name = "y_rotation" value = "y">' +
+				'<label class = "toolbar_label">Z rotation</label>' +
+				'<input  id = "z_rot_input" class = "toolbar_input" type = "text" name = "z_rotation" value = "z">'
+
+
+			);
+			var element = document.getElementById("x_input")
+			element.value = mesh.position.x;
+		})
+	}else if (mesh.geometry instanceof THREE.PlaneGeometry) {
+
+	}else if (mesh.geometry instanceof THREE.SphereGeometry) {
+
+	}else if (mesh.geometry instanceof THREE.CylinderGeometry) {
+
+	}
 }
 // Rotates the currently selected mesh left
 document.getElementById('left_rot_butt').onclick = function() {
