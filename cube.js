@@ -83,9 +83,8 @@ document.getElementById('place_butt').onclick = function() {
 	rebuildDropDown();
 	render();
 }
-document.getElementById('meshSelector').onclick = function() {
+document.getElementById('meshSelector').onchange = function() {
 	mesh = meshes[document.getElementById('meshSelector').value];
-
 	// The html elements needed for the mesh toolbar
 	$(document).ready(function() {
 		$("#editorDiv").empty();
