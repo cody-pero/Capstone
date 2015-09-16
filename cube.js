@@ -81,89 +81,79 @@ document.getElementById('place_butt').onclick = function() {
 }
 document.getElementById('meshSelector').onclick = function() {
 	mesh = meshes[document.getElementById('meshSelector').value];
-	if (mesh.geometry instanceof THREE.BoxGeometry) {
-		$(document).ready(function() {
-			$("#editorDiv").append(
-				'<button id = "left_rot_butt" class = "toolbar_butt">Rotate Left</button>' +
-				'<button id = "right_rot_butt" class = "toolbar_butt">Rotate Right</button>' +
-				'<button id = "up_rot_butt" class = "toolbar_butt">Rotate Up</button>' +
-				'<button id = "down_rot_butt" class = "toolbar_butt">Rotate Down</button>' +
-				'<button id = "move_forward_butt" class = "toolbar_butt">Move Forward</button>' +
-				'<button id = "move_back_butt" class = "toolbar_butt">Move Back</button>' +
-				'<button id = "move_up_butt" class = "toolbar_butt">Move Up</button>' +
-				'<button id = "move_down_butt" class = "toolbar_butt">Move Down</button>' +
-				'<button id = "move_left_butt" class = "toolbar_butt">Move Left</button>' +
-				'<button id = "move_right_butt" class = "toolbar_butt">Move Right</button>' +
-				'<button id = "scale_up_butt" class = "toolbar_butt">Scale Up</button>' +
-				'<button id = "scale_down_butt" class = "toolbar_butt">Scale Down</button>' +
-				'<label class = "toolbar_label">X position</label>' +
-				'<input  id = "x_input" class = "toolbar_input" type = "text" name = "x_coordinate" value = "x">' +
-				'<label class = "toolbar_label">Y position</label>' +
-				'<input  id = "y_input" class = "toolbar_input" type = "text" name = "y_coordinate" value = "y">' +
-				'<label class = "toolbar_label">Z position</label>' +
-				'<input  id = "z_input" class = "toolbar_input" type = "text" name = "z_coordinate" value = "z">' +
-				'<label class = "toolbar_label">X rotation</label>' +
-				'<input  id = "x_rot_input" class = "toolbar_input" type = "text" name = "x_rotation" value = "x">' +
-				'<label class = "toolbar_label">Y rotation</label>' +
-				'<input  id = "y_rot_input" class = "toolbar_input" type = "text" name = "y_rotation" value = "y">' +
-				'<label class = "toolbar_label">Z rotation</label>' +
-				'<input  id = "z_rot_input" class = "toolbar_input" type = "text" name = "z_rotation" value = "z">'
 
+	// The html elements needed for the mesh toolbar
+	$(document).ready(function() {
+		$("#editorDiv").empty();
+		$("#editorDiv").append(
+			'<button id = "left_rot_butt" class = "toolbar_butt">Rotate Left</button>' +
+			'<button id = "right_rot_butt" class = "toolbar_butt">Rotate Right</button>' +
+			'<button id = "up_rot_butt" class = "toolbar_butt">Rotate Up</button>' +
+			'<button id = "down_rot_butt" class = "toolbar_butt">Rotate Down</button>' +
+			'<button id = "move_forward_butt" class = "toolbar_butt">Move Forward</button>' +
+			'<button id = "move_back_butt" class = "toolbar_butt">Move Back</button>' +
+			'<button id = "move_up_butt" class = "toolbar_butt">Move Up</button>' +
+			'<button id = "move_down_butt" class = "toolbar_butt">Move Down</button>' +
+			'<button id = "move_left_butt" class = "toolbar_butt">Move Left</button>' +
+			'<button id = "move_right_butt" class = "toolbar_butt">Move Right</button>' +
+			'<button id = "scale_up_butt" class = "toolbar_butt">Scale Up</button>' +
+			'<button id = "scale_down_butt" class = "toolbar_butt">Scale Down</button>' +
+			'<label class = "toolbar_label">X position</label>' +
+			'<input  id = "x_input" class = "toolbar_input" type = "text" name = "x_coordinate" value = "x">' +
+			'<label class = "toolbar_label">Y position</label>' +
+			'<input  id = "y_input" class = "toolbar_input" type = "text" name = "y_coordinate" value = "y">' +
+			'<label class = "toolbar_label">Z position</label>' +
+			'<input  id = "z_input" class = "toolbar_input" type = "text" name = "z_coordinate" value = "z">' +
+			'<label class = "toolbar_label">X rotation</label>' +
+			'<input  id = "x_rot_input" class = "toolbar_input" type = "text" name = "x_rotation" value = "x">' +
+			'<label class = "toolbar_label">Y rotation</label>' +
+			'<input  id = "y_rot_input" class = "toolbar_input" type = "text" name = "y_rotation" value = "y">' +
+			'<label class = "toolbar_label">Z rotation</label>' +
+			'<input  id = "z_rot_input" class = "toolbar_input" type = "text" name = "z_rotation" value = "z">' +
+			'<button id = "save_settings_butt">Change position settings</button>'
+		);
+		// Setting the initial values in the input fields for position and rotation
+		var element = document.getElementById("x_input")
+		element.value = mesh.position.x;
+		element = document.getElementById("y_input")
+		element.value = mesh.position.y;
+		element = document.getElementById("z_input")
+		element.value = mesh.position.z;
+		element = document.getElementById("x_rot_input")
+		element.value = mesh.rotation.x;
+		element = document.getElementById("y_rot_input")
+		element.value = mesh.rotation.y;
+		element = document.getElementById("z_rot_input")
+		element.value = mesh.rotation.z;
 
-			);
-			var element = document.getElementById("x_input")
-			element.value = mesh.position.x;
-		})
-	}else if (mesh.geometry instanceof THREE.PlaneGeometry) {
+		//**********************************place button code in here*********************************************//
+		// Left Rotation button code
+		document.getElementById('left_rot_butt').onclick = function() {
+			mesh = meshes[document.getElementById('meshSelector').value];
+			mesh.rotation.y += 0.1;
+			render();
+		}
+		// Right Rotation button code
+		document.getElementById('right_rot_butt').onclick = function() {
+			mesh = meshes[document.getElementById('meshSelector').value];
+			mesh.rotation.y -= 0.1;
+			render();
+		}
+		// Change position settings button code
+		document.getElementById('save_settings_butt').onclick = function() {
+			mesh = meshes[document.getElementById('meshSelector').value];
+			mesh.rotation.x = document.getElementById("x_rot_input").value;
+			mesh.rotation.y = document.getElementById("y_rot_input").value;
+			mesh.rotation.z = document.getElementById("z_rot_input").value;
+			mesh.position.x = document.getElementById("x_input").value;
+			mesh.position.y = document.getElementById("y_input").value;
+			mesh.position.z = document.getElementById("z_input").value;
+			render();
+		}
+		//******************************no more button code*******************************************************//
+	})
+}
 
-	}else if (mesh.geometry instanceof THREE.SphereGeometry) {
-
-	}else if (mesh.geometry instanceof THREE.CylinderGeometry) {
-
-	}
-}
-// Rotates the currently selected mesh left
-document.getElementById('left_rot_butt').onclick = function() {
-	mesh = meshes[document.getElementById('meshSelector').value];
-	mesh.rotation.y += 0.1;
-	render();
-}
-// Rotates the currently selected mesh right
-document.getElementById('right_rot_butt').onclick = function() {
-	mesh = meshes[document.getElementById('meshSelector').value];
-	mesh.rotation.y -= 0.1;
-	render();
-}
-// Moves the currently selected mesh to the coordinates in the input fields
-document.getElementById('move_shape_butt').onclick = function() {
-	mesh = meshes[document.getElementById('meshSelector').value];
-	if(document.getElementById('x_input').value != "x")
-	{
-		mesh.translateX(document.getElementById('x_input').value);
-	}
-	if(document.getElementById('y_input').value != "y")
-	{
-		mesh.translateY(document.getElementById('y_input').value);
-	}
-	if(document.getElementById('z_input').value != "z")
-	{
-		mesh.translateZ(document.getElementById('z_input').value);
-	}
-
-	render();
-}
-// Scales the currently selected mesh down
-document.getElementById('down_butt').onclick = function() {
-	mesh = meshes[document.getElementById('meshSelector').value];
-	mesh.scale.set(mesh.scale.x - .1, mesh.scale.y - .1, mesh.scale.z - .1);
-	render();
-}
-// Scales the currently selected mesh up
-document.getElementById('up_butt').onclick = function() {
-	mesh = meshes[document.getElementById('meshSelector').value];
-	mesh.scale.set(mesh.scale.x + .1, mesh.scale.y + .1, mesh.scale.z + .1);
-	render();
-}
 
 //**************************************************Listeners********************************************************//
 // totally not working right now
