@@ -12,6 +12,9 @@ render();
 
 function rebuildDropDown() {
 	var selectBox = document.getElementById('meshSelector');
+	for(var i = 0; i<selectBox.length; i++){
+		selectBox.options[i] = null;
+	}
 	var option = document.createElement("option");
 	option.text = mesh.name2;
 	option.value = mesh.name2;
@@ -86,6 +89,7 @@ document.getElementById('meshSelector').onclick = function() {
 	$(document).ready(function() {
 		$("#editorDiv").empty();
 		$("#editorDiv").append(
+			'<button id = "delete_butt" style="width: 100%">Delete</button>' +
 			'<button id = "left_rot_butt" class = "toolbar_butt">Rotate Left</button>' +
 			'<button id = "right_rot_butt" class = "toolbar_butt">Rotate Right</button>' +
 			'<button id = "up_rot_butt" class = "toolbar_butt">Rotate Up</button>' +
@@ -137,6 +141,14 @@ document.getElementById('meshSelector').onclick = function() {
 		document.getElementById('right_rot_butt').onclick = function() {
 			mesh = meshes[document.getElementById('meshSelector').value];
 			mesh.rotation.y -= 0.1;
+			render();
+		}
+		// Delete button code
+		document.getElementById('delete_butt').onclick = function() {
+			mesh = meshes[document.getElementById('meshSelector').value];
+			delete meshes[document.getElementById('meshSelector').value]
+			scene.remove(mesh);
+			rebuildDropDown();
 			render();
 		}
 		// Change position settings button code
