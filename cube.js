@@ -135,13 +135,73 @@ document.getElementById('meshSelector').onclick = function() {
 		// Left Rotation button code
 		document.getElementById('left_rot_butt').onclick = function() {
 			mesh = meshes[document.getElementById('meshSelector').value];
-			mesh.rotation.y += 0.1;
+			mesh.rotation.y -= 0.1;
 			render();
 		}
 		// Right Rotation button code
 		document.getElementById('right_rot_butt').onclick = function() {
 			mesh = meshes[document.getElementById('meshSelector').value];
-			mesh.rotation.y -= 0.1;
+			mesh.rotation.y += 0.1;
+			render();
+		}
+		// Up Rotation button code
+		document.getElementById('up_rot_butt').onclick = function() {
+			mesh = meshes[document.getElementById('meshSelector').value];
+			mesh.rotation.x -= 0.1;
+			render();
+		}
+		// Down Rotation button code
+		document.getElementById('down_rot_butt').onclick = function() {
+			mesh = meshes[document.getElementById('meshSelector').value];
+			mesh.rotation.x += 0.1;
+			render();
+		}
+		//Move forward button code
+		document.getElementById('move_forward_butt').onclick = function() {
+			mesh = meshes[document.getElementById('meshSelector').value];
+			mesh.position.z += 5;
+			render();
+		}
+		//Move backward button code
+		document.getElementById('move_back_butt').onclick = function() {
+			mesh = meshes[document.getElementById('meshSelector').value];
+			mesh.position.z -= 5;
+			render();
+		}
+		//Move down button code
+		document.getElementById('move_down_butt').onclick = function() {
+			mesh = meshes[document.getElementById('meshSelector').value];
+			mesh.position.y -= 5;
+			render();
+		}
+		//Move up button code
+		document.getElementById('move_up_butt').onclick = function() {
+			mesh = meshes[document.getElementById('meshSelector').value];
+			mesh.position.y += 5;
+			render();
+		}
+		//Move left button code
+		document.getElementById('move_left_butt').onclick = function() {
+			mesh = meshes[document.getElementById('meshSelector').value];
+			mesh.position.x -= 5;
+			render();
+		}
+		//Move right button code
+		document.getElementById('move_right_butt').onclick = function() {
+			mesh = meshes[document.getElementById('meshSelector').value];
+			mesh.position.x += 5;
+			render();
+		}
+		//Scale up button code
+		document.getElementById('scale_up_butt').onclick = function() {
+			mesh = meshes[document.getElementById('meshSelector').value];
+			mesh.scale.set(mesh.scale.x + .1, mesh.scale.y + .1, mesh.scale.z + .1);
+			render();
+		}
+		//Scale down button code
+		document.getElementById('scale_down_butt').onclick = function() {
+			mesh = meshes[document.getElementById('meshSelector').value];
+			mesh.scale.set(mesh.scale.x - .1, mesh.scale.y - .1, mesh.scale.z - .1);
 			render();
 		}
 		// Delete button code
