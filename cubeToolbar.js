@@ -57,11 +57,11 @@ function displayCubeToolbar() {
     element.value = mesh.rotation.z;
 
     element = document.getElementById("geo_Height_Input");
-    element.value = mesh.geometry.parameters.height;
+    element.value = mesh.scale.y * mesh.geometry.parameters.height;
     element = document.getElementById("geo_Width_Input");
-    element.value = mesh.geometry.parameters.width;
+    element.value = mesh.scale.x * mesh.geometry.parameters.width;
     element = document.getElementById("geo_Depth_Input");
-    element.value = mesh.geometry.parameters.depth;
+    element.value = mesh.scale.z * mesh.geometry.parameters.depth;
     element = document.getElementById("geo_HeiSeg_Input");
     element.value = mesh.geometry.parameters.heightSegments;
     element = document.getElementById("geo_WidSeg_Input");
@@ -73,28 +73,28 @@ function displayCubeToolbar() {
     // Left Rotation button code
     document.getElementById('left_rot_butt').onclick = function () {
         mesh = meshes[document.getElementById('meshSelector').value];
-        mesh.rotation.y -= 1;
+        mesh.rotation.y -= .1;
         document.getElementById("y_rot_input").value = mesh.rotation.y;
         render();
     };
     // Right Rotation button code
     document.getElementById('right_rot_butt').onclick = function () {
         mesh = meshes[document.getElementById('meshSelector').value];
-        mesh.rotation.y += 1;
+        mesh.rotation.y += .1;
         document.getElementById("y_rot_input").value = mesh.rotation.y;
         render();
     };
     // Up Rotation button code
     document.getElementById('up_rot_butt').onclick = function () {
         mesh = meshes[document.getElementById('meshSelector').value];
-        mesh.rotation.x -= 1;
+        mesh.rotation.x -= .1;
         document.getElementById("x_rot_input").value = mesh.rotation.x;
         render();
     };
     // Down Rotation button code
     document.getElementById('down_rot_butt').onclick = function () {
         mesh = meshes[document.getElementById('meshSelector').value];
-        mesh.rotation.x += 1;
+        mesh.rotation.x += .1;
         document.getElementById("x_rot_input").value = mesh.rotation.x;
         render();
     };
@@ -144,18 +144,18 @@ function displayCubeToolbar() {
     document.getElementById('scale_up_butt').onclick = function () {
         mesh = meshes[document.getElementById('meshSelector').value];
         mesh.scale.set(mesh.scale.x + .1, mesh.scale.y + .1, mesh.scale.z + .1);
-        document.getElementById("geo_Width_Input").value = mesh.scale.x;
-        document.getElementById("geo_Height_Input").value = mesh.scale.y;
-        document.getElementById("geo_Depth_Input").value = mesh.scale.z;
+        document.getElementById("geo_Width_Input").value = (mesh.scale.x * mesh.geometry.parameters.width);
+        document.getElementById("geo_Height_Input").value = (mesh.scale.y * mesh.geometry.parameters.height);
+        document.getElementById("geo_Depth_Input").value = (mesh.scale.z * mesh.geometry.parameters.height);
         render();
     };
 //Scale down button code
     document.getElementById('scale_down_butt').onclick = function () {
         mesh = meshes[document.getElementById('meshSelector').value];
         mesh.scale.set(mesh.scale.x - .1, mesh.scale.y - .1, mesh.scale.z - .1);
-        document.getElementById("geo_Width_Input").value = mesh.scale.x;
-        document.getElementById("geo_Height_Input").value = mesh.scale.y;
-        document.getElementById("geo_Depth_Input").value = mesh.scale.z;
+        document.getElementById("geo_Width_Input").value = (mesh.scale.x * mesh.geometry.parameters.width);
+        document.getElementById("geo_Height_Input").value = (mesh.scale.y * mesh.geometry.parameters.height);
+        document.getElementById("geo_Depth_Input").value = (mesh.scale.z * mesh.geometry.parameters.height);
         render();
     };
 // Delete button code
@@ -176,15 +176,18 @@ function displayCubeToolbar() {
                                             document.getElementById("geo_HeiSeg_Input").value,
                                             document.getElementById("geo_DepSeg_Input").value);
         var newMesh = new THREE.Mesh( newGeo, mesh.material );
-
-        // Figure out how to copy over the transformations**************************************************************
+        newMesh.position.x = mesh.position.x;
+        newMesh.position.y = mesh.position.y;
+        newMesh.position.z = mesh.position.z;
+        newMesh.rotation.x = mesh.rotation.x;
+        newMesh.rotation.y = mesh.rotation.y;
+        newMesh.rotation.z = mesh.rotation.z;
 
         newMesh.name2 = mesh.name2;
         scene.remove(mesh);
         delete meshes[mesh.name2];
         scene.add(newMesh);
         meshes[newMesh.name2] = newMesh;
-        alert(newMesh.name2);
 
         render();
     };
