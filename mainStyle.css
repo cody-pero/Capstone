@@ -8,7 +8,7 @@ body{
 	height: 100%;	
 }
 #WebGLCanvas{
-	position: absolute;
+	position: fixed;
 	top: 10%;
 	left: 20%;
 	width: 70%;
@@ -73,8 +73,20 @@ body{
 	
 }
 #load_butt {
+	 position: absolute;
+	 left: 105px;
+	 top: 10px;
+	 width: 75px;
+}
+#show_grid {
 	position: absolute;
-	left: 105px;
+	left: 185px;
+	top: 10px;
+	width: 80px;
+}
+#hide_grid {
+	position: absolute;
+	left: 270px;
 	top: 10px;
 	width: 75px;
 }

@@ -75,70 +75,70 @@ function displayCubeToolbar() {
         mesh = meshes[document.getElementById('meshSelector').value];
         mesh.rotation.y -= .1;
         document.getElementById("y_rot_input").value = mesh.rotation.y;
-        render();
+
     };
     // Right Rotation button code
     document.getElementById('right_rot_butt').onclick = function () {
         mesh = meshes[document.getElementById('meshSelector').value];
         mesh.rotation.y += .1;
         document.getElementById("y_rot_input").value = mesh.rotation.y;
-        render();
+
     };
     // Up Rotation button code
     document.getElementById('up_rot_butt').onclick = function () {
         mesh = meshes[document.getElementById('meshSelector').value];
         mesh.rotation.x -= .1;
         document.getElementById("x_rot_input").value = mesh.rotation.x;
-        render();
+
     };
     // Down Rotation button code
     document.getElementById('down_rot_butt').onclick = function () {
         mesh = meshes[document.getElementById('meshSelector').value];
         mesh.rotation.x += .1;
         document.getElementById("x_rot_input").value = mesh.rotation.x;
-        render();
+
     };
     //Move forward button code
     document.getElementById('move_forward_butt').onclick = function () {
         mesh = meshes[document.getElementById('meshSelector').value];
         mesh.position.z += 5;
         document.getElementById("z_input").value = mesh.position.z;
-        render();
+
     };
 //Move backward button code
     document.getElementById('move_back_butt').onclick = function () {
         mesh = meshes[document.getElementById('meshSelector').value];
         mesh.position.z -= 5;
         document.getElementById("z_input").value = mesh.position.z;
-        render();
+
     };
 //Move down button code
     document.getElementById('move_down_butt').onclick = function () {
         mesh = meshes[document.getElementById('meshSelector').value];
         mesh.position.y -= 5;
         document.getElementById("y_input").value = mesh.position.y;
-        render();
+
     };
 //Move up button code
     document.getElementById('move_up_butt').onclick = function () {
         mesh = meshes[document.getElementById('meshSelector').value];
         mesh.position.y += 5;
         document.getElementById("y_input").value = mesh.position.y;
-        render();
+
     };
 //Move left button code
     document.getElementById('move_left_butt').onclick = function () {
         mesh = meshes[document.getElementById('meshSelector').value];
         mesh.position.x -= 5;
         document.getElementById("x_input").value = mesh.position.x;
-        render();
+
     };
 //Move right button code
     document.getElementById('move_right_butt').onclick = function () {
         mesh = meshes[document.getElementById('meshSelector').value];
         mesh.position.x += 5;
         document.getElementById("x_input").value = mesh.position.x;
-        render();
+
     };
 //Scale up button code
     document.getElementById('scale_up_butt').onclick = function () {
@@ -147,7 +147,7 @@ function displayCubeToolbar() {
         document.getElementById("geo_Width_Input").value = (mesh.scale.x * mesh.geometry.parameters.width);
         document.getElementById("geo_Height_Input").value = (mesh.scale.y * mesh.geometry.parameters.height);
         document.getElementById("geo_Depth_Input").value = (mesh.scale.z * mesh.geometry.parameters.height);
-        render();
+
     };
 //Scale down button code
     document.getElementById('scale_down_butt').onclick = function () {
@@ -156,7 +156,7 @@ function displayCubeToolbar() {
         document.getElementById("geo_Width_Input").value = (mesh.scale.x * mesh.geometry.parameters.width);
         document.getElementById("geo_Height_Input").value = (mesh.scale.y * mesh.geometry.parameters.height);
         document.getElementById("geo_Depth_Input").value = (mesh.scale.z * mesh.geometry.parameters.height);
-        render();
+
     };
 // Delete button code
     document.getElementById('delete_butt').onclick = function () {
@@ -165,7 +165,7 @@ function displayCubeToolbar() {
         delete meshes[selectedMesh.name2];
         rebuildDropDown();
         editorDiv.empty();
-        render();
+
     };
     document.getElementById('change_geometry_butt').onclick = function () {
         mesh = meshes[document.getElementById('meshSelector').value];
@@ -189,6 +189,6 @@ function displayCubeToolbar() {
         scene.add(newMesh);
         meshes[newMesh.name2] = newMesh;
 
-        render();
+
     };
 }
