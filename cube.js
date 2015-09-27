@@ -6,7 +6,7 @@ var camera, scene, renderer,
 
 // key value pair of shape names holding reference to the meshes
 var meshes;
-var grid;
+var grid = [];
 // current available id number for mesh
 var id = 0;
 // Used to tell the time from the last render call, for smoother supposedly smoother animation but thats not working yet to test
@@ -60,8 +60,13 @@ function onMouseClick( event ) {
 	var intersects = raycaster.intersectObjects( scene.children );
 	if(intersects.length > 0 ) {
 		alert( intersects[0].object.name );
+        document.getElementById('meshSelector').onchange = function() {
+            mesh = meshes.getObjectByName( intersects[0].object.name );
+            document.getElementById('meshSelector').value = mesh.name;
+        }
 	} else {
-		alert("miss");
+        var editorDiv = $("#editorDiv");
+        editorDiv.empty();
 	}
 
 
@@ -88,9 +93,10 @@ function addGrid() {
 	geometry.vertices.push( new THREE.Vector3( 0, 0, 0 ) );
 	geometry.vertices.push( new THREE.Vector3( -camera.far, 0, 0 ) );
     material = new THREE.LineBasicMaterial( { color: 0x0000ff, transparent: true, opacity: gridOpacity } );
-    grid = new THREE.Line( geometry, material );
-    grid.name = "x_axis";
-    scene.add( grid );
+    var line = new THREE.Line( geometry, material );
+    line.name = "x_axis";
+    grid.push( line );
+    scene.add( line );
 
     geometry = new THREE.Geometry();
 	geometry.vertices.push( new THREE.Vector3( 0, 0, 0 ) );
@@ -98,9 +104,10 @@ function addGrid() {
 	geometry.vertices.push( new THREE.Vector3( 0, 0, 0 ) );
 	geometry.vertices.push( new THREE.Vector3( 0, -camera.far, 0 ) );
     material = new THREE.LineBasicMaterial( { color: 0x00ff00, transparent: true, opacity: gridOpacity } );
-    grid = new THREE.Line( geometry, material );
-    grid.name = "y_axis";
-    scene.add( grid );
+    line = new THREE.Line( geometry, material );
+    line.name = "y_axis";
+    grid.push( line );
+    scene.add( line );
 
     geometry = new THREE.Geometry();
 	geometry.vertices.push( new THREE.Vector3( 0, 0, 0 ) );
@@ -108,17 +115,22 @@ function addGrid() {
 	geometry.vertices.push( new THREE.Vector3( 0, 0, 0 ) );
 	geometry.vertices.push( new THREE.Vector3( 0, 0, -camera.far ) );
     material = new THREE.LineBasicMaterial( { color: 0xff0000, transparent: true, opacity: gridOpacity } );
-	grid = new THREE.Line( geometry, material );
-    grid.name = "z_axis";
-	scene.add( grid );
+    line = new THREE.Line( geometry, material );
+    line.name = "z_axis";
+    grid.push( line );
+	scene.add( line );
 }
 
 function hideGrid() {
-	grid.visible = false;
+    for (var line in grid) {
+        grid[line].visible = false;
+    }
 }
 
 function showGrid() {
-	grid.visible = true;
+    for ( var line in grid ) {
+        grid[line].visible = true;
+    }
 }
 // Function for displaying the scene elements in the drop down
 function rebuildDropDown() {
@@ -153,14 +165,12 @@ document.getElementById('place_butt').onclick = function() {
 	mesh.name2 = document.getElementById('shapeSelector').value + id;
 	// Adds to the list of meshes in the scene for future reference
 	meshes[ mesh.name2 ] = mesh;
-	objects.push( mesh );
 	id++;
 	scene.add( mesh );
 	// Repopulates the selectMesh dropdown list with the new mesh name
 	rebuildDropDown();
 };
 document.getElementById('show_grid').onclick = function() {
-
 	showGrid();
 };
 document.getElementById('hide_grid').onclick = function() {
