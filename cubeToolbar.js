@@ -184,6 +184,7 @@ function displayCubeToolbar() {
         newMesh.rotation.z = mesh.rotation.z;
 
         newMesh.name2 = mesh.name2;
+        newMesh.name = mesh.name2;
         scene.remove(mesh);
         delete meshes[mesh.name2];
         scene.add(newMesh);

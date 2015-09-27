@@ -13,7 +13,6 @@ var id = 0;
 var clock = new THREE.Clock();
 // The controls for the camera
 var trackballControls;
-var objects;
 // Gets stuff going
 init();
 render();
@@ -22,7 +21,6 @@ render();
 function init() {
 	scene = new THREE.Scene();
 	meshes = {};
-	objects = [];
 	container = document.getElementById("WebGLCanvas");
 	containerWidth = container.clientWidth;
 	containerHeight = container.clientHeight;
@@ -30,8 +28,11 @@ function init() {
 	renderer.setSize(containerWidth, containerHeight );
 	container.appendChild(renderer.domElement);
 
+    // Had to add an offset to where the camera starts the z_axis going directly into the eye of the camera caused picking issues
 	camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 10000 );
 	camera.position.z = 100;
+    camera.position.y = 100;
+    camera.position.x = 100;
 
 	trackballControls = new THREE.TrackballControls( camera , container);
 	trackballControls.rotateSpeed = 1.0;
@@ -41,19 +42,24 @@ function init() {
 	addGrid();
 	raycaster = new THREE.Raycaster();
 	mouseVector = new THREE.Vector2();
-//	container.addEventListener( 'mousedown', onMouseClick, false );
+    // Using mouseup instead of mousedown allows the combination of both the camera controls and picking to happen,
+    // not sure why mousedown was messing with the camera controls...
+	container.addEventListener( 'mouseup', onMouseClick, false );
 }
-/*
+
+// Picking event handler
 function onMouseClick( event ) {
+    // Prevents the normal browser clicking event from being processed
 	event.preventDefault();
+    // Calculates the mouse position on the canvas
 	mouseVector.x = ( ( event.clientX - container.offsetLeft ) / container.clientWidth ) * 2 - 1;
 	mouseVector.y = -( ( event.clientY - container.offsetTop ) / container.clientHeight ) * 2 + 1;
-	alert("here");
 	raycaster.setFromCamera( mouseVector, camera );
 
+    // Searches the scene objects for an intersection
 	var intersects = raycaster.intersectObjects( scene.children );
 	if(intersects.length > 0 ) {
-		alert("x = " + mouseVector.x  + "\ny = " + mouseVector.y );
+		alert( intersects[0].object.name );
 	} else {
 		alert("miss");
 	}
@@ -61,7 +67,7 @@ function onMouseClick( event ) {
 
 
 }
-*/
+
 function render() {
 	// Returns the amount of time since the last call to getDelta();
 	var delta = clock.getDelta();
@@ -75,22 +81,35 @@ function render() {
 }
 // Adds the grid to the scene
 function addGrid() {
-	material = new THREE.LineBasicMaterial( { color: 0x0000ff } );
+    var gridOpacity = .4;
 	geometry = new THREE.Geometry();
-	var maxCameraLength = 10000;
 	geometry.vertices.push( new THREE.Vector3( 0, 0, 0 ) );
-	geometry.vertices.push( new THREE.Vector3( maxCameraLength, 0, 0 ) );
+	geometry.vertices.push( new THREE.Vector3( camera.far, 0, 0 ) );
 	geometry.vertices.push( new THREE.Vector3( 0, 0, 0 ) );
-	geometry.vertices.push( new THREE.Vector3( -maxCameraLength, 0, 0 ) );
+	geometry.vertices.push( new THREE.Vector3( -camera.far, 0, 0 ) );
+    material = new THREE.LineBasicMaterial( { color: 0x0000ff, transparent: true, opacity: gridOpacity } );
+    grid = new THREE.Line( geometry, material );
+    grid.name = "x_axis";
+    scene.add( grid );
+
+    geometry = new THREE.Geometry();
 	geometry.vertices.push( new THREE.Vector3( 0, 0, 0 ) );
-	geometry.vertices.push( new THREE.Vector3( 0, maxCameraLength, 0 ) );
+	geometry.vertices.push( new THREE.Vector3( 0,camera.far, 0 ) );
 	geometry.vertices.push( new THREE.Vector3( 0, 0, 0 ) );
-	geometry.vertices.push( new THREE.Vector3( 0, -maxCameraLength, 0 ) );
+	geometry.vertices.push( new THREE.Vector3( 0, -camera.far, 0 ) );
+    material = new THREE.LineBasicMaterial( { color: 0x00ff00, transparent: true, opacity: gridOpacity } );
+    grid = new THREE.Line( geometry, material );
+    grid.name = "y_axis";
+    scene.add( grid );
+
+    geometry = new THREE.Geometry();
 	geometry.vertices.push( new THREE.Vector3( 0, 0, 0 ) );
-	geometry.vertices.push( new THREE.Vector3( 0, 0, maxCameraLength ) );
+	geometry.vertices.push( new THREE.Vector3( 0, 0, camera.far ) );
 	geometry.vertices.push( new THREE.Vector3( 0, 0, 0 ) );
-	geometry.vertices.push( new THREE.Vector3( 0, 0, -maxCameraLength ) );
+	geometry.vertices.push( new THREE.Vector3( 0, 0, -camera.far ) );
+    material = new THREE.LineBasicMaterial( { color: 0xff0000, transparent: true, opacity: gridOpacity } );
 	grid = new THREE.Line( geometry, material );
+    grid.name = "z_axis";
 	scene.add( grid );
 }
 
@@ -129,6 +148,7 @@ document.getElementById('place_butt').onclick = function() {
 	material = new THREE.MeshBasicMaterial( { color: 0x00ff00 , wireframe: true} );
 	// Creating the new mesh
 	mesh = new THREE.Mesh( geometry, material );
+    mesh.name = document.getElementById('shapeSelector').value + id;
 	// Associates a name with the mesh, not sure if name was a part of a mesh object so named it name2 for now
 	mesh.name2 = document.getElementById('shapeSelector').value + id;
 	// Adds to the list of meshes in the scene for future reference
