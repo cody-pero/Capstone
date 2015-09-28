@@ -59,11 +59,13 @@ function onMouseClick( event ) {
     // Searches the scene objects for an intersection
 	var intersects = raycaster.intersectObjects( scene.children );
 	if(intersects.length > 0 ) {
-		alert( intersects[0].object.name );
-        document.getElementById('meshSelector').onchange = function() {
-            mesh = meshes.getObjectByName( intersects[0].object.name );
-            document.getElementById('meshSelector').value = mesh.name;
+        for ( var i = 0; i < document.getElementById("meshSelector").length; i++ ) {
+            if ( document.getElementById("meshSelector").options[i].value == intersects[0].object.name ) {
+                document.getElementById("meshSelector").options[i].selected = true;
+                break;
+            }
         }
+        changeEditorDiv();
 	} else {
         var editorDiv = $("#editorDiv");
         editorDiv.empty();
@@ -73,6 +75,12 @@ function onMouseClick( event ) {
 
 }
 
+function changeEditorDiv() {
+    if ( mesh.geometry instanceof THREE.BoxGeometry ) {
+        displayCubeToolbar();
+    }
+
+}
 function render() {
 	// Returns the amount of time since the last call to getDelta();
 	var delta = clock.getDelta();
@@ -179,7 +187,7 @@ document.getElementById('hide_grid').onclick = function() {
 document.getElementById('meshSelector').onchange = function() {
 	mesh = meshes[document.getElementById('meshSelector').value];
 	$(document).ready(function() {
-		displayCubeToolbar();
+		changeEditorDiv();
 	})
 };
 
