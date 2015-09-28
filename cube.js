@@ -78,6 +78,7 @@ function onMouseClick( event ) {
 }
 
 function changeEditorDiv() {
+    mesh = meshes[document.getElementById('meshSelector').value];
     if ( mesh.geometry instanceof THREE.BoxGeometry ) {
         displayCubeToolbar();
     } else  if ( mesh.geometry instanceof THREE.SphereGeometry ) {
