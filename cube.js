@@ -56,7 +56,8 @@ function onMouseClick( event ) {
 	mouseVector.y = -( ( event.clientY - container.offsetTop ) / container.clientHeight ) * 2 + 1;
 	raycaster.setFromCamera( mouseVector, camera );
 
-    // Searches the scene objects for an intersection
+    // Searches the scene objects for an intersection, if intersections are found selects the drop down list entry
+    // and updates the editor panel for the selected scene element, if no intersections found clears the editor
 	var intersects = raycaster.intersectObjects( scene.children );
 	if(intersects.length > 0 ) {
         for ( var i = 0; i < document.getElementById("meshSelector").length; i++ ) {
@@ -68,6 +69,7 @@ function onMouseClick( event ) {
         changeEditorDiv();
 	} else {
         var editorDiv = $("#editorDiv");
+        document.getElementById("meshSelector").selectedIndex = -1;
         editorDiv.empty();
 	}
 
@@ -78,8 +80,11 @@ function onMouseClick( event ) {
 function changeEditorDiv() {
     if ( mesh.geometry instanceof THREE.BoxGeometry ) {
         displayCubeToolbar();
+    } else  if ( mesh.geometry instanceof THREE.SphereGeometry ) {
+        var editorDiv = $("#editorDiv");
+        editorDiv.empty();
+        editorDiv.append('<button id = "delete_butt" style="width: 100%">I am a sphere</button>');
     }
-
 }
 function render() {
 	// Returns the amount of time since the last call to getDelta();
