@@ -166,7 +166,7 @@ document.getElementById('place_butt').onclick = function() {
 	} else if ( document.getElementById('shapeSelector').value == 'Plane') {
 		geometry = new THREE.PlaneGeometry(200, 200, 1);
 	} else if ( document.getElementById('shapeSelector').value == 'Sphere') {
-		geometry = new THREE.SphereGeometry( 200, 8, 6);
+		geometry = new THREE.SphereGeometry( 10, 10, 10);
 	} else if ( document.getElementById('shapeSelector').value == 'Cylinder') {
 		geometry = new THREE.CylinderGeometry(200, 200, 200, 8);
 	}
