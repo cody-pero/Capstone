@@ -157,6 +157,7 @@ function rebuildDropDown() {
 		selectBox.add(option);
 	}
 }
+
 //******************************Stuff that makes the buttons work****************************************************//
 
 // Handles adding a new mesh to the scene by reading in the selected drop down item and creating the proper geometry
@@ -190,6 +191,18 @@ document.getElementById('show_grid').onclick = function() {
 document.getElementById('hide_grid').onclick = function() {
 	hideGrid();
 };
+document.getElementById('save_butt').onclick = function() {
+	var exporter = new THREE.OBJExporter().parse(scene);
+	//TODO Save the file via HTML
+}
+document.getElementById('load_butt').onclick = function(file) {
+	var importer = new THREE.ObjectLoader();
+	importer.load(file, function (object) {
+		console.log('adding object to scene');
+		scene.add(object);
+	})
+	//TODO Pass the file to this function
+}
 document.getElementById('meshSelector').onchange = function() {
 	mesh = meshes[document.getElementById('meshSelector').value];
 	$(document).ready(function() {
