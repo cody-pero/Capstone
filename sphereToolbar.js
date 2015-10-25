@@ -1,4 +1,4 @@
-function displayCubeToolbar() {
+function displaySphereToolbar() {
     var editorDiv = $("#editorDiv");
     editorDiv.empty();
     editorDiv.append(
@@ -27,21 +27,24 @@ function displayCubeToolbar() {
         '<input  id = "y_rot_input" class = "toolbar_input" type = "text" name = "y_rotation" value = "y"><br />' +
         '<label class = "toolbar_label">Z rotation</label>' +
         '<input  id = "z_rot_input" class = "toolbar_input" type = "text" name = "z_rotation" value = "z"><br />' +
-        '<label class = "toolbar_label">Width :</label>' +
-        '<input id = "geo_Width_Input" class = "toolbar_input" type = "text" name = "geo_Width" value = "w"><br />' +
-        '<label class = "toolbar_label">Height:</label>' +
-        '<input id = "geo_Height_Input" class = "toolbar_input" type = "text" name = "geo_Height" value = "h"><br />' +
-        '<label class = "toolbar_label">Depth :</label>' +
-        '<input id = "geo_Depth_Input" class = "toolbar_input" type = "text" name = "geo_Depth" value = "d"><br />' +
+
+        '<label class = "toolbar_label">Radius :</label>' +
+        '<input id = "geo_Radius_Input" class = "toolbar_input" type = "text" name = "geo_radius" value = "w"><br />' +
         '<label class = "toolbar_label">Width Segments :</label>' +
         '<input id = "geo_WidSeg_Input" class = "toolbar_input" type = "text" name = "wid_Seg" value = "ws"><br />' +
         '<label class = "toolbar_label">Height Segments :</label>' +
         '<input id = "geo_HeiSeg_Input" class = "toolbar_input" type = "text" name = "hei_Seg" value = "hs"><br />' +
-        '<label class = "toolbar_label">Depth Segments :</label>' +
-        '<input id = "geo_DepSeg_Input" class = "toolbar_input" type = "text" name = "Dep_Seg" value = "ds"><br />' +
+        '<label class = "toolbar_label">Phi Start :</label>' +
+        '<input id = "geo_phi_start_Input" class = "toolbar_input" type = "text" name = "Phi_Start" value = "ds"><br />' +
+        '<label class = "toolbar_label">Phi Length :</label>' +
+        '<input id = "geo_phi_length_Input" class = "toolbar_input" type = "text" name = "Phi_Length" value = "ds"><br />' +
+        '<label class = "toolbar_label">Theta Start :</label>' +
+        '<input id = "geo_theta_start_Input" class = "toolbar_input" type = "text" name = "Theta_Start" value = "ds"><br />' +
+        '<label class = "toolbar_label">Theta Length :</label>' +
+        '<input id = "geo_theta_length_Input" class = "toolbar_input" type = "text" name = "Theta_Length" value = "ds"><br />' +
         '<button id = "change_geometry_butt">Change Geometry Settings</button>'
-
     );
+
     // Setting the initial values in the input fields for position and rotation
     var element = document.getElementById("x_input");
     element.value = mesh.position.x;
@@ -56,18 +59,20 @@ function displayCubeToolbar() {
     element = document.getElementById("z_rot_input");
     element.value = mesh.rotation.z;
 
-    element = document.getElementById("geo_Height_Input");
-    element.value = mesh.scale.y * mesh.geometry.parameters.height;
-    element = document.getElementById("geo_Width_Input");
-    element.value = mesh.scale.x * mesh.geometry.parameters.width;
-    element = document.getElementById("geo_Depth_Input");
-    element.value = mesh.scale.z * mesh.geometry.parameters.depth;
+    element = document.getElementById("geo_Radius_Input");
+    element.value = mesh.scale.y * mesh.geometry.parameters.radius;
     element = document.getElementById("geo_HeiSeg_Input");
     element.value = mesh.geometry.parameters.heightSegments;
     element = document.getElementById("geo_WidSeg_Input");
     element.value = mesh.geometry.parameters.widthSegments;
-    element = document.getElementById("geo_DepSeg_Input");
-    element.value = mesh.geometry.parameters.depthSegments;
+    element = document.getElementById("geo_phi_start_Input");
+    element.value = mesh.geometry.parameters.phiStart;
+    element = document.getElementById("geo_phi_length_Input");
+    element.value = mesh.geometry.parameters.phiLength;
+    element = document.getElementById("geo_theta_start_Input");
+    element.value = mesh.geometry.parameters.thetaStart;
+    element = document.getElementById("geo_theta_length_Input");
+    element.value = mesh.geometry.parameters.thetaLength;
 
     //**********************************place button code in here*********************************************//
     // Left Rotation button code
@@ -146,7 +151,7 @@ function displayCubeToolbar() {
         mesh.scale.set(mesh.scale.x + .1, mesh.scale.y + .1, mesh.scale.z + .1);
         document.getElementById("geo_Width_Input").value = (mesh.scale.x * mesh.geometry.parameters.width);
         document.getElementById("geo_Height_Input").value = (mesh.scale.y * mesh.geometry.parameters.height);
-        document.getElementById("geo_Depth_Input").value = (mesh.scale.z * mesh.geometry.parameters.height);
+        document.getElementById("geo_Depth_Input").value = (mesh.scale.z * mesh.geometry.parameters.depth);
 
     };
 //Scale down button code
@@ -155,7 +160,7 @@ function displayCubeToolbar() {
         mesh.scale.set(mesh.scale.x - .1, mesh.scale.y - .1, mesh.scale.z - .1);
         document.getElementById("geo_Width_Input").value = (mesh.scale.x * mesh.geometry.parameters.width);
         document.getElementById("geo_Height_Input").value = (mesh.scale.y * mesh.geometry.parameters.height);
-        document.getElementById("geo_Depth_Input").value = (mesh.scale.z * mesh.geometry.parameters.height);
+        document.getElementById("geo_Depth_Input").value = (mesh.scale.z * mesh.geometry.parameters.depth);
 
     };
 // Delete button code
@@ -169,12 +174,13 @@ function displayCubeToolbar() {
     };
     document.getElementById('change_geometry_butt').onclick = function () {
         mesh = meshes[document.getElementById('meshSelector').value];
-        var newGeo = new THREE.BoxGeometry( document.getElementById("geo_Width_Input").value,
-                                            document.getElementById("geo_Height_Input").value,
-                                            document.getElementById("geo_Depth_Input").value,
-                                            document.getElementById("geo_WidSeg_Input").value,
-                                            document.getElementById("geo_HeiSeg_Input").value,
-                                            document.getElementById("geo_DepSeg_Input").value);
+        var newGeo = new THREE.SphereGeometry( document.getElementById("geo_Radius_Input").value,
+            document.getElementById("geo_WidSeg_Input").value,
+            document.getElementById("geo_HeiSeg_Input").value,
+            document.getElementById("geo_phi_start_Input").value,
+            document.getElementById("geo_phi_length_Input").value,
+            document.getElementById("geo_theta_start_Input").value,
+            document.getElementById("geo_theta_length_Input").value);
         var newMesh = new THREE.Mesh( newGeo, mesh.material );
         newMesh.position.x = mesh.position.x;
         newMesh.position.y = mesh.position.y;
