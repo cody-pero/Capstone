@@ -23,7 +23,7 @@ body{
 	top: 10vh;
 	height: 90vh;
 	width: 15vw;
-	overflow-y: scroll;
+	overflow-y: auto;
 	background-color: #000000;
 	font-size: 1vw;
 	text-align: center;
@@ -103,17 +103,17 @@ body{
 toolbox css
 */
 .toolbar_butt {
-	width: 04vw;
-	height: 3vm;
+	width: 7.5vw;
+	height: 3vh;
 	font-size: .9vw;
 }
 .toolbar_label {
-	padding-right: 20%;
-	height: 3%;
+	padding-right: 5vw;
+	height: 03vh;
 	font-size: 01vw;
 }
 .toolbar_input {
 	width: 30%;
 	height: 3%;
-	font-size: 80%;
+	font-size: 01vw;
 }
