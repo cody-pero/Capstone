@@ -189,6 +189,14 @@ function onMouseClick( event ) {
         editorDiv.empty();
     }
 }
+function load(file){
+    alert(document.getElementById("fileinput"))
+    var importer = new THREE.ObjectLoader();
+    importer.load(file, function (object) {
+        console.log('adding object to scene');
+        scene.add(object);
+    })
+}
 //******************************Stuff that makes the buttons work****************************************************//
 
 // Handles adding a new mesh to the scene by reading in the selected drop down item and creating the proper geometry
@@ -223,6 +231,33 @@ document.getElementById('show_grid').onclick = function() {
 document.getElementById('hide_grid').onclick = function() {
     hideGrid();
 };
+document.getElementById('save_butt').onclick = function() {
+    var retval = prompt("Please enter a filename: ");
+    var filename = retval;
+    var exporter = new THREE.OBJExporter().parse(scene);
+    var pom = document.createElement('a');
+    pom.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(exporter));
+    pom.setAttribute('download', filename);
+    if (document.createEvent) {
+        var event = document.createEvent('MouseEvents');
+        event.initEvent('click', true, true);
+        pom.dispatchEvent(event);
+        }
+    else {
+        pom.click();
+        }
+}
+document.getElementById('load_butt').onclick = function() {
+    alert(document.getElementById("fileinput"))
+    var importer = new THREE.ObjectLoader();
+    importer.load(file, function (object) {
+        console.log('adding object to scene');
+        scene.add(object);
+    })
+    //TODO Pass the file to this function
+}
+
+
 document.getElementById('meshSelector').onchange = function() {
     changeEditorDiv();
 };
