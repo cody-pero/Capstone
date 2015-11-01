@@ -1,20 +1,22 @@
 $(function() { init(); render(); });
-var container, scene, camera, renderer, controls, stats, editor;
-var keyboard = new THREEx.KeyboardState();
+var container, scene, camera, renderer, controls, stats, editor, faceEditor;
+var keyboard = new KeyboardState();
 var clock = new THREE.Clock();
 
+var mode;
 var mesh;
-var gui;
+var selectedFace;
 var grid = [];
 var id = 0;
 
 function init() {
     // Scene
     scene = new THREE.Scene();
-
+    mode = "picking";
     // Camera / container / renderer settings
     container = document.getElementById( "WebGLCanvas" );
     editor = $("#editorDiv");
+    faceEditor = $("#editor2Div");
     var SCREEN_WIDTH = container.clientWidth, SCREEN_HEIGHT = container.clientHeight;
     var VIEW_ANGLE = 2, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 1, FAR = 20000;
 
@@ -45,6 +47,8 @@ function init() {
     light2.name = "Default Ambient Light";
     scene.add(light2);
 
+    // Keyboard events here
+
     scene.add(light);
     addGrid();
     rebuildDropDown();
@@ -57,13 +61,15 @@ function render() {
 
 }
 function update() {
-    // Keyboard events here
-    if( keyboard.pressed( "z" ) ) {
-        alert("made it here");
+    keyboard.update();
+    if( keyboard.up( "e" ) ) {
+        if( mesh.geometry instanceof THREE.BoxGeometry ) {
+            mode = "explode";
+        }
+    } else if( keyboard.up( "p" ) ) {
+        mode = "picking";
     }
     controls.update();
-    camera.update();
-    renderer.update();
 }
 // Adds the grid to the scene
 function addGrid() {
@@ -169,17 +175,23 @@ function onMouseClick( event ) {
     // Calculates the mouse position on the canvas
     mouseVector.x = ( ( event.clientX - container.offsetLeft ) / container.clientWidth ) * 2 - 1;
     mouseVector.y = -( ( event.clientY - container.offsetTop ) / container.clientHeight ) * 2 + 1;
-    raycaster.setFromCamera( mouseVector, camera );
-
+    raycaster.setFromCamera(mouseVector, camera);
     // Searches the scene objects for an intersection, if intersections are found selects the drop down list entry
     // and updates the editor panel for the selected scene element, if no intersections found clears the editor
-    var intersects = raycaster.intersectObjects( scene.children );
-    if(intersects.length > 0 ) {
-        for ( var i = 0; i < document.getElementById("meshSelector").length; i++ ) {
-            if ( document.getElementById("meshSelector").options[i].value == intersects[0].object.name ) {
-                document.getElementById("meshSelector").options[i].selected = true;
-                break;
+    var intersects = raycaster.intersectObjects(scene.children);
+    if (intersects.length > 0) {
+        if ( mode != "explode" ) {
+            for (var i = 0; i < document.getElementById("meshSelector").length; i++) {
+                if (document.getElementById("meshSelector").options[i].value == intersects[0].object.name) {
+                    document.getElementById("meshSelector").options[i].selected = true;
+                    break;
+                }
             }
+        } else {
+            selectedFace = intersects[ 0].face;
+            displayFaceEditor( selectedFace );
+            intersects[ 0 ].face.color.setRGB( 0.8 * Math.random() + 0.2, 0, 0 );
+            intersects[ 0 ].object.geometry.colorsNeedUpdate = true;
         }
         changeEditorDiv();
     } else {
@@ -214,9 +226,11 @@ document.getElementById('place_butt').onclick = function() {
             geometry = new THREE.CylinderGeometry(1, 1, 1, 8, 1, false, 0, 2 * 3.14);
         }
         // Material for the new mesh
-        material = new THREE.MeshLambertMaterial( { color: 0xff0000 });
+        material = new THREE.MeshLambertMaterial( { color: 0xff0000, vertexColors: THREE.FaceColors });
+        material.vertexColors = THREE.FaceColors;
         material.transparent = true;
         mesh = new THREE.Mesh(geometry, material);
+        mesh.geometry.dynamic = true;
         mesh.name = document.getElementById('shapeSelector').value + id;
 
         id++;

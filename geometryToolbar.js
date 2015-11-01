@@ -3,10 +3,10 @@
  */
 // The List of values being tracked.
 var parameters;
-var mesh;
+var gui;
 function displayGeometryToolbar( ) {
-    mesh = scene.getObjectByName( document.getElementById( 'meshSelector' ).value );
     gui = new dat.GUI();
+    gui.width = container.clientWidth * .23;
     // List of different values dat.gui will keep track of
     generateParameterList();
     // Displays the objects name at the top of the dat.gui window
@@ -30,7 +30,6 @@ function displayGeometryToolbar( ) {
 }
 // A list of values that we are tracking for this mesh object
 function generateParameterList() {
-    mesh = scene.getObjectByName( document.getElementById( 'meshSelector' ).value );
     parameters =
     {
         X_Position      : mesh.position.x,
@@ -109,7 +108,6 @@ function generateParameterList() {
 
 // Handles the adjustment of any of the position values being tracked for the mesh object
 function setupPositionFolder() {
-    mesh = scene.getObjectByName( document.getElementById( 'meshSelector' ).value );
     var folder1 = gui.addFolder('Position');
     var meshX_Pos = folder1.add(parameters, 'X_Position').min(-200).max(200).step(1).listen();
     meshX_Pos.onChange(function (value) {
@@ -133,7 +131,6 @@ function setupPositionFolder() {
 }
 // Handles the adjustment of any of the rotation values being tracked for the mesh object
 function setupRotationFolder() {
-    mesh = scene.getObjectByName( document.getElementById( 'meshSelector' ).value );
     var folder2 = gui.addFolder('Rotation');
     var meshX_Rot = folder2.add(parameters, 'X_Rotation').min(-6.2).max(6.2).step(.1).listen();
     meshX_Rot.onChange(function (value) {
@@ -157,7 +154,6 @@ function setupRotationFolder() {
 }
 // Handles the adjustment of any of the scaling values being tracked for the mesh object
 function setupScalingFolder() {
-    mesh = scene.getObjectByName( document.getElementById( 'meshSelector' ).value );
     var folder3 = gui.addFolder('Scaling');
     var meshX_Sca = folder3.add(parameters, 'X_Scale').min(1).max(100).step(1).listen();
     meshX_Sca.onChange(function (value) {
@@ -191,7 +187,6 @@ function setupScalingFolder() {
 
 // Handles the adjustment of any of the geometry values being tracked must update the mesh for these changes
 function setupGeometryFolder() {
-    mesh = scene.getObjectByName( document.getElementById( 'meshSelector' ).value );
     var folder4 = gui.addFolder('Geometry');
     if( mesh.geometry instanceof THREE.BoxGeometry ) {
         var meshWidth = folder4.add(parameters, 'Width').min(1).max(100).step(1).listen();
@@ -236,7 +231,6 @@ function setupGeometryFolder() {
 }
 // Handles the adjustment of any of the material values being tracked must update the mesh for the material type
 function setupMaterialsFolder() {
-    mesh = scene.getObjectByName( document.getElementById( 'meshSelector' ).value );
     var folder5 = gui.addFolder( 'Materials' );
     var meshColor = folder5.addColor( parameters, 'Color_Diffuse').name('Color (Diffuse)').listen();
     meshColor.onChange(function (value) {
@@ -264,9 +258,9 @@ function setupMaterialsFolder() {
         updateMesh()
     });
 }
+
 // Handles when a mesh must be recreated not just manipulated
 function updateMesh() {
-    mesh = scene.getObjectByName( document.getElementById( 'meshSelector' ).value );
     if (mesh.geometry instanceof THREE.BoxGeometry ) {
         var newGeo = new THREE.BoxGeometry(parameters.Width, parameters.Height, parameters.Depth,
                                            parameters.Width_Segments, parameters.Height_Segments,
