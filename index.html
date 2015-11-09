@@ -10,8 +10,8 @@
         <script src = "DAT.GUI.min.js"></script>
         <script src = "Detector.js"></script>
         <script src = "highlighter.js"></script>
-        <script src = "ObjectLoader.js"></script>
-        <script src = "OBJExporter.js"></script>
+        <script src = "SceneExporter.js"></script>
+        <script src = "SceneLoader.js"></script>
         <script src = "OrbitControls.js"></script>
         <script src = "KeyboardState.js"></script>
         <script src = "THREEx.WindowResize.js"></script>
@@ -28,27 +28,7 @@
 			</div>
 			<div id = "menuBarDiv">
 				<button id = "save_butt">Save</button>
-				<input type="file" id="fileinput" />
-				<script type="text/javascript">
-					function readSingleFile(evt) {
-						//Retrieve the first (and only!) File from the FileList object
-						var f = evt.target.files[0];
-						var json;
-						if (f) {
-							json = JSON.parse(f);
-						} else {
-							alert("Failed to load file");
-						}
-						alert(document.getElementById("fileinput"))
-						var importer = new THREE.ObjectLoader();
-						importer.load(globalHYPE, function (object) {
-							console.log('adding object to scene');
-							scene.add(object);
-						})
-					}
-
-					document.getElementById('fileinput').addEventListener('change', readSingleFile, false);
-				</script>
+				<button id = "load_butt">Load</button>
 				<button id = "show_grid">Show Grid</button>
 				<button id = "hide_grid">Hide Grid</button>
 			</div>

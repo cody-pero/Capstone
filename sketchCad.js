@@ -201,14 +201,6 @@ function onMouseClick( event ) {
         editorDiv.empty();
     }
 }
-function load(file){
-    alert(document.getElementById("fileinput"))
-    var importer = new THREE.ObjectLoader();
-    importer.load(file, function (object) {
-        console.log('adding object to scene');
-        scene.add(object);
-    })
-}
 //******************************Stuff that makes the buttons work****************************************************//
 
 // Handles adding a new mesh to the scene by reading in the selected drop down item and creating the proper geometry
@@ -246,11 +238,17 @@ document.getElementById('hide_grid').onclick = function() {
     hideGrid();
 };
 document.getElementById('save_butt').onclick = function() {
+/*
     var retval = prompt("Please enter a filename: ");
     var filename = retval;
-    var exporter = new THREE.OBJExporter().parse(scene);
+*/
+    var exporter = new THREE.SceneExporter();
+    var sceneJson = JSON.stringify(exporter.parse(scene));
+    localStorage.setItem('scene', sceneJson);
+/*
+    //TODO DO NOT DELETE ANYTHING BELOW
     var pom = document.createElement('a');
-    pom.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(exporter));
+    pom.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(sceneJson));
     pom.setAttribute('download', filename);
     if (document.createEvent) {
         var event = document.createEvent('MouseEvents');
@@ -260,6 +258,26 @@ document.getElementById('save_butt').onclick = function() {
     else {
         pom.click();
         }
+        */
+};
+
+document.getElementById("load_butt").onclick = function() {
+        var json = (localStorage.getItem('scene'));
+        var sceneLoader = new THREE.SceneLoader();
+        sceneLoader.parse(JSON.parse(json), function (e) {
+            scene = e.scene;
+        }, '.');
+    rebuildDropDown();
+    addGrid();
+    var SCREEN_WIDTH = container.clientWidth, SCREEN_HEIGHT = container.clientHeight;
+    var VIEW_ANGLE = 2, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 1, FAR = 20000;
+    camera = new THREE.PerspectiveCamera( VIEW_ANGLE, ASPECT, NEAR, FAR );
+    camera.name = "Camera";
+    scene.add(camera);
+    camera.position.set(100,100,100);
+
+    // Camera Controls
+    controls = new THREE.OrbitControls( camera, renderer.domElement );
 }
 document.getElementById('meshSelector').onchange = function() {
     changeEditorDiv();
