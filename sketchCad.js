@@ -261,17 +261,6 @@ document.getElementById('save_butt').onclick = function() {
         pom.click();
         }
 }
-document.getElementById('load_butt').onclick = function() {
-    alert(document.getElementById("fileinput"))
-    var importer = new THREE.ObjectLoader();
-    importer.load(file, function (object) {
-        console.log('adding object to scene');
-        scene.add(object);
-    })
-    //TODO Pass the file to this function
-}
-
-
 document.getElementById('meshSelector').onchange = function() {
     changeEditorDiv();
 };

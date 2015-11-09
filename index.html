@@ -33,18 +33,18 @@
 					function readSingleFile(evt) {
 						//Retrieve the first (and only!) File from the FileList object
 						var f = evt.target.files[0];
-
+						var json;
 						if (f) {
-							var r = new FileReader();
-							r.onload = function(e) {
-								var contents = e.target.result;
-								alert(contents.substr(1, contents.indexOf("n"))
-								);
-							}
-							r.readAsText(f);
+							json = JSON.parse(f);
 						} else {
 							alert("Failed to load file");
 						}
+						alert(document.getElementById("fileinput"))
+						var importer = new THREE.ObjectLoader();
+						importer.load(globalHYPE, function (object) {
+							console.log('adding object to scene');
+							scene.add(object);
+						})
 					}
 
 					document.getElementById('fileinput').addEventListener('change', readSingleFile, false);
