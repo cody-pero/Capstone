@@ -63,9 +63,7 @@ function render() {
 function update() {
     keyboard.update();
     if( keyboard.up( "e" ) ) {
-        if( mesh.geometry instanceof THREE.BoxGeometry ) {
-            mode = "explode";
-        }
+        mode = "explode";
     } else if( keyboard.up( "p" ) ) {
         mode = "picking";
     }
@@ -180,14 +178,14 @@ function onMouseClick( event ) {
     // and updates the editor panel for the selected scene element, if no intersections found clears the editor
     var intersects = raycaster.intersectObjects(scene.children);
     if (intersects.length > 0) {
-        if ( mode != "explode" ) {
-            for (var i = 0; i < document.getElementById("meshSelector").length; i++) {
-                if (document.getElementById("meshSelector").options[i].value == intersects[0].object.name) {
-                    document.getElementById("meshSelector").options[i].selected = true;
-                    break;
-                }
+
+        for (var i = 0; i < document.getElementById("meshSelector").length; i++) {
+            if (document.getElementById("meshSelector").options[i].value == intersects[0].object.name) {
+                document.getElementById("meshSelector").options[i].selected = true;
+                break;
             }
-        } else {
+        }
+        if ( mode == "explode" ) {
             selectedFace = intersects[ 0].face;
             displayFaceEditor( selectedFace );
             intersects[ 0 ].face.color.setRGB( 0.8 * Math.random() + 0.2, 0, 0 );
@@ -197,8 +195,10 @@ function onMouseClick( event ) {
     } else {
         cleanupHighlighter();
         var editorDiv = $("#editorDiv");
+        var editor2Div = $("#editor2Div");
         document.getElementById("meshSelector").selectedIndex = -1;
         editorDiv.empty();
+        editor2Div.empty();
     }
 }
 //******************************Stuff that makes the buttons work****************************************************//

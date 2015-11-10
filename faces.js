@@ -4,6 +4,7 @@ var faceParameters;
 function displayFaceEditor( selectedFace ) {
     faceEditor.empty();
     this.selectedFace = selectedFace;
+
     if ( this.selectedFace != null ) {
         faceGui = new dat.GUI();
         faceGui.width = container.clientWidth * .23;
@@ -78,19 +79,19 @@ function generateVertexFolder() {
     });
 
     var folder3 = faceGui.addFolder('Vertex C');
-    var cXValue = folder3.add(faceParameters,"vertexCXPos").min(0).max(50).step(.1).listen();
+    var cXValue = folder3.add(faceParameters,"vertexCXPos").min(-50).max(50).step(1).listen();
     cXValue.onChange(function (value) {
         mesh.geometry.vertices[selectedFace.a].x =  value;
         mesh.geometry.__dirtyVertices = true;
         mesh.geometry.verticesNeedUpdate = true;
     });
-    var cYValue = folder3.add(faceParameters, "vertexCYPos").min(0).max(50).step(.1).listen();
+    var cYValue = folder3.add(faceParameters, "vertexCYPos").min(-50).max(50).step(1).listen();
     cYValue.onChange(function (value) {
         mesh.geometry.vertices[selectedFace.a].y = value;
         mesh.geometry.__dirtyVertices = true;
         mesh.geometry.verticesNeedUpdate = true;
     });
-    var cZValue = folder3.add(faceParameters, "vertexCZPos").min(-200).max(200).step(.1).listen();
+    var cZValue = folder3.add(faceParameters, "vertexCZPos").min(-50).max(50).step(1).listen();
     cZValue.onChange(function (value) {
         mesh.geometry.vertices[selectedFace.a].z = value;
         mesh.geometry.__dirtyVertices = true;
