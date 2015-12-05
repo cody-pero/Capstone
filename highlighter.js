@@ -3,6 +3,7 @@
  */
 var outlineMesh;
 var outLineMaterial;
+/*
 var yArrow, xArrow, zArrow;
 var arrowArray;
 var origin;
@@ -13,10 +14,15 @@ var zDir = new THREE.Vector3( 0, 0, 1 );
 var xColor = 0x0000FF;
 var yColor = 0x00FF00;
 var zColor = 0xFF0000;
-
+*/
+var highlighted = false;
+function returnState() {
+    return highlighted;
+}
 function createHighlighter() {
     outLineMaterial =  new THREE.MeshBasicMaterial( { color: 0x0000ff, side: THREE.BackSide } );
     outlineMesh = new THREE.Mesh( mesh.geometry, outLineMaterial );
+    outlineMesh.name = "default";
     outlineMesh.position.x = mesh.position.x;
     outlineMesh.position.y = mesh.position.y;
     outlineMesh.position.z = mesh.position.z;
@@ -24,9 +30,11 @@ function createHighlighter() {
     outlineMesh.scale.y = mesh.scale.y + .1;
     outlineMesh.scale.z = mesh.scale.z + .1;
     scene.add( outlineMesh );
-    addArrows();
-    hideArrows();
+    highlighted = true;
+//    addArrows();
+//    hideArrows();
 }
+/*
 function addArrows() {
     origin = mesh.position;
     arrowLength = mesh.scale.x * 2;
@@ -43,11 +51,14 @@ function addArrows() {
     scene.add( zArrow );
     arrowArray = [ yArrow, xArrow, zArrow ];
 }
+*/
 function showHighlighter() {
     outlineMesh.visible = true;
+    //showArrows();
 }
 function hideHighlighter() {
     outlineMesh.visible = false;
+    //hideArrows();
 }
 function moveHighlighter() {
     outlineMesh.position.x = mesh.position.x;
@@ -63,9 +74,10 @@ function rescaleHighlighter() {
     outlineMesh.scale.y = mesh.scale.y;
     outlineMesh.scale.z = mesh.scale.z;
 }
+/*
 function hideArrows() {
-    xArrow.visible = false;
     yArrow.visible = false;
+    xArrow.visible = false;
     zArrow.visible = false;
 }
 function showArrows() {
@@ -97,9 +109,12 @@ function updateArrows() {
     newArrowOrigin();
     resizeArrows();
 }
+*/
 function cleanupHighlighter() {
-    scene.remove(xArrow);
+    highlighted = false;
+//    scene.remove(xArrow);
     scene.remove(outlineMesh);
-    scene.remove(yArrow);
-    scene.remove(zArrow);
+//    scene.remove(yArrow);
+//    scene.remove(zArrow);
 }
+
