@@ -16,32 +16,45 @@ function displaySphereToolbar() {
         '<button id = "scale_up_butt" class = "toolbar_butt">Scale Up</button>' +
         '<button id = "scale_down_butt" class = "toolbar_butt">Scale Down</button>' +
         '<label class = "toolbar_label">X position</label>' +
-        '<input  id = "x_input" class = "toolbar_input" type = "text" name = "x_coordinate" value = "x"><br />' +
+        '<input  id = "x_input" class = "toolbar_input" type = "text" name = "x_coordinate" ' +
+        'value = "x"><br />' +
         '<label class = "toolbar_label">Y position</label>' +
-        '<input  id = "y_input" class = "toolbar_input" type = "text" name = "y_coordinate" value = "y"><br />' +
+        '<input  id = "y_input" class = "toolbar_input" type = "text" name = "y_coordinate" ' +
+        'value = "y"><br />' +
         '<label class = "toolbar_label">Z position</label>' +
-        '<input  id = "z_input" class = "toolbar_input" type = "text" name = "z_coordinate" value = "z"><br />' +
+        '<input  id = "z_input" class = "toolbar_input" type = "text" name = "z_coordinate" ' +
+        'value = "z"><br />' +
         '<label class = "toolbar_label">X rotation</label>' +
-        '<input  id = "x_rot_input" class = "toolbar_input" type = "text" name = "x_rotation" value = "x"><br />' +
+        '<input  id = "x_rot_input" class = "toolbar_input" type = "text" name = "x_rotation" ' +
+        'value = "x"><br />' +
         '<label class = "toolbar_label">Y rotation</label>' +
-        '<input  id = "y_rot_input" class = "toolbar_input" type = "text" name = "y_rotation" value = "y"><br />' +
+        '<input  id = "y_rot_input" class = "toolbar_input" type = "text" name = "y_rotation" ' +
+        'value = "y"><br />' +
         '<label class = "toolbar_label">Z rotation</label>' +
-        '<input  id = "z_rot_input" class = "toolbar_input" type = "text" name = "z_rotation" value = "z"><br />' +
+        '<input  id = "z_rot_input" class = "toolbar_input" type = "text" name = "z_rotation" ' +
+        'value = "z"><br />' +
 
         '<label class = "toolbar_label">Radius :</label>' +
-        '<input id = "geo_Radius_Input" class = "toolbar_input" type = "text" name = "geo_radius" value = "w"><br />' +
+        '<input id = "geo_Radius_Input" class = "toolbar_input" type = "text" name = ' +
+        '"geo_radius" value = "w"><br />' +
         '<label class = "toolbar_label">Width Segments :</label>' +
-        '<input id = "geo_WidSeg_Input" class = "toolbar_input" type = "text" name = "wid_Seg" value = "ws"><br />' +
+        '<input id = "geo_WidSeg_Input" class = "toolbar_input" type = "text" name = ' +
+        '"wid_Seg" value = "ws"><br />' +
         '<label class = "toolbar_label">Height Segments :</label>' +
-        '<input id = "geo_HeiSeg_Input" class = "toolbar_input" type = "text" name = "hei_Seg" value = "hs"><br />' +
+        '<input id = "geo_HeiSeg_Input" class = "toolbar_input" type = "text" name = ' +
+        '"hei_Seg" value = "hs"><br />' +
         '<label class = "toolbar_label">Phi Start :</label>' +
-        '<input id = "geo_phi_start_Input" class = "toolbar_input" type = "text" name = "Phi_Start" value = "ds"><br />' +
+        '<input id = "geo_phi_start_Input" class = "toolbar_input" type = "text" name = ' +
+        '"Phi_Start" value = "ds"><br />' +
         '<label class = "toolbar_label">Phi Length :</label>' +
-        '<input id = "geo_phi_length_Input" class = "toolbar_input" type = "text" name = "Phi_Length" value = "ds"><br />' +
+        '<input id = "geo_phi_length_Input" class = "toolbar_input" type = "text" name = ' +
+        '"Phi_Length" value = "ds"><br />' +
         '<label class = "toolbar_label">Theta Start :</label>' +
-        '<input id = "geo_theta_start_Input" class = "toolbar_input" type = "text" name = "Theta_Start" value = "ds"><br />' +
+        '<input id = "geo_theta_start_Input" class = "toolbar_input" type = "text" name = ' +
+        '"Theta_Start" value = "ds"><br />' +
         '<label class = "toolbar_label">Theta Length :</label>' +
-        '<input id = "geo_theta_length_Input" class = "toolbar_input" type = "text" name = "Theta_Length" value = "ds"><br />' +
+        '<input id = "geo_theta_length_Input" class = "toolbar_input" type = "text" name = ' +
+        '"Theta_Length" value = "ds"><br />' +
         '<button id = "change_geometry_butt">Change Geometry Settings</button>'
     );
 
@@ -74,7 +87,7 @@ function displaySphereToolbar() {
     element = document.getElementById("geo_theta_length_Input");
     element.value = mesh.geometry.parameters.thetaLength;
 
-    //**********************************place button code in here*********************************************//
+    //**********************************place button code in here***********************************
     // Left Rotation button code
     document.getElementById('left_rot_butt').onclick = function () {
         mesh = meshes[document.getElementById('meshSelector').value];
@@ -149,18 +162,24 @@ function displaySphereToolbar() {
     document.getElementById('scale_up_butt').onclick = function () {
         mesh = meshes[document.getElementById('meshSelector').value];
         mesh.scale.set(mesh.scale.x + .1, mesh.scale.y + .1, mesh.scale.z + .1);
-        document.getElementById("geo_Width_Input").value = (mesh.scale.x * mesh.geometry.parameters.width);
-        document.getElementById("geo_Height_Input").value = (mesh.scale.y * mesh.geometry.parameters.height);
-        document.getElementById("geo_Depth_Input").value = (mesh.scale.z * mesh.geometry.parameters.depth);
+        document.getElementById("geo_Width_Input").value = (mesh.scale.x *
+        mesh.geometry.parameters.width);
+        document.getElementById("geo_Height_Input").value = (mesh.scale.y *
+        mesh.geometry.parameters.height);
+        document.getElementById("geo_Depth_Input").value = (mesh.scale.z *
+        mesh.geometry.parameters.depth);
 
     };
 //Scale down button code
     document.getElementById('scale_down_butt').onclick = function () {
         mesh = meshes[document.getElementById('meshSelector').value];
         mesh.scale.set(mesh.scale.x - .1, mesh.scale.y - .1, mesh.scale.z - .1);
-        document.getElementById("geo_Width_Input").value = (mesh.scale.x * mesh.geometry.parameters.width);
-        document.getElementById("geo_Height_Input").value = (mesh.scale.y * mesh.geometry.parameters.height);
-        document.getElementById("geo_Depth_Input").value = (mesh.scale.z * mesh.geometry.parameters.depth);
+        document.getElementById("geo_Width_Input").value = (mesh.scale.x *
+        mesh.geometry.parameters.width);
+        document.getElementById("geo_Height_Input").value = (mesh.scale.y *
+        mesh.geometry.parameters.height);
+        document.getElementById("geo_Depth_Input").value = (mesh.scale.z *
+        mesh.geometry.parameters.depth);
 
     };
 // Delete button code
@@ -174,14 +193,14 @@ function displaySphereToolbar() {
     };
     document.getElementById('change_geometry_butt').onclick = function () {
         mesh = meshes[document.getElementById('meshSelector').value];
-        var newGeo = new THREE.SphereGeometry( document.getElementById("geo_Radius_Input").value,
+        var newGeo = new THREE.SphereGeometry(document.getElementById("geo_Radius_Input").value,
             document.getElementById("geo_WidSeg_Input").value,
             document.getElementById("geo_HeiSeg_Input").value,
             document.getElementById("geo_phi_start_Input").value,
             document.getElementById("geo_phi_length_Input").value,
             document.getElementById("geo_theta_start_Input").value,
             document.getElementById("geo_theta_length_Input").value);
-        var newMesh = new THREE.Mesh( newGeo, mesh.material );
+        var newMesh = new THREE.Mesh(newGeo, mesh.material);
         newMesh.position.x = mesh.position.x;
         newMesh.position.y = mesh.position.y;
         newMesh.position.z = mesh.position.z;

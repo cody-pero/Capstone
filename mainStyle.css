@@ -1,121 +1,137 @@
-body{
-	background-color: #000000;
-	overflow: hidden;
-	margin: 0px;
+body {
+    background-color: #000000;
+    overflow: hidden;
+    margin: 0px;
 }
-#containerDiv{
-	width: 100vw;
-	height: 100vh;
+
+#containerDiv {
+    width: 100vw;
+    height: 100vh;
 }
-#WebGLCanvas{
-	/*position: absolute;*/
-	position: absolute;
-	top: 10vh;
-	left: 15vw;
-	width: 70vw;
-	height: 90vh;
-	background-color: #555555;	
+
+#WebGLCanvas {
+    /*position: absolute;*/
+    position: absolute;
+    top: 10vh;
+    left: 15vw;
+    width: 70vw;
+    height: 90vh;
+    background-color: #555555;
 }
-#leftSideBarDiv{
-	/*position: absolute;*/
-	position: static;
-	color: #FFFFFF;
-	top: 10vh;
-	height: 90vh;
-	width: 15vw;
-	overflow-y: auto;
-	background-color: #000000;
-	font-size: 1vw;
-	text-align: center;
+
+#leftSideBarDiv {
+    /*position: absolute;*/
+    position: static;
+    color: #FFFFFF;
+    top: 10vh;
+    height: 90vh;
+    width: 15vw;
+    overflow-y: auto;
+    background-color: #000000;
+    font-size: 1vw;
+    text-align: center;
 }
-#rightSideBarDiv{
-	/*position: absolute;*/
-	margin-left: -30px;
-	position: absolute;
-	color: #FFFFFF;
-	top: 10vh;
-	left: 85%;
-	height: 90vh;
-	width: 20vw;
-	background: linear-gradient(#125252, #000000);
+
+#rightSideBarDiv {
+    /*position: absolute;*/
+    margin-left: -30px;
+    position: absolute;
+    color: #FFFFFF;
+    top: 10vh;
+    left: 85%;
+    height: 90vh;
+    width: 20vw;
+    background: linear-gradient(#125252, #000000);
 }
-#titleBarDiv{
-	/*position: absolute;*/
-	position: static;
-	top: 0vh;
-	width: 100vw;
-	height: 5vh;
-	background-color: #125252;
-	color : #FFFFFF;
-	text-align: center;
-	font-size: 5vh;
+
+#titleBarDiv {
+    /*position: absolute;*/
+    position: static;
+    top: 0vh;
+    width: 100vw;
+    height: 5vh;
+    background-color: #125252;
+    color: #FFFFFF;
+    text-align: center;
+    font-size: 5vh;
 }
-#menuBarDiv{
-	/*position: absolute;*/
-	position: static;
-	top: 5vh;
-	width: 100vw;
-	height: 5vh;
-	background: linear-gradient(#125252, #000000);
-	color: #FFFFFF;
-	
+
+#menuBarDiv {
+    /*position: absolute;*/
+    position: static;
+    top: 5vh;
+    width: 100vw;
+    height: 5vh;
+    background: linear-gradient(#125252, #000000);
+    color: #FFFFFF;
+
 }
+
 #editor2Div {
-	margin-left: -30px;
+    margin-left: -30px;
 }
-#editorDiv{
-	margin-right: -30px;
-	height: 77%;
-	background: linear-gradient(#125252, #000000);
+
+#editorDiv {
+    margin-right: -30px;
+    height: 77%;
+    background: linear-gradient(#125252, #000000);
 }
+
 #meshSelector {
-	width: 90%;
-	height: 15%;
+    width: 90%;
+    height: 15%;
 }
+
 #save_butt {
-	position: static;
-	left: 25px;
-	top: 10px;
-	width: 75px;
-	font-size: 01vw;
-	
+    position: static;
+    left: 25px;
+    top: 10px;
+    width: 75px;
+    font-size: 01vw;
+
 }
+
 #load_butt {
-	 position: static;
-	 left: 105px;
-	 top: 10px;
-	 width: 75px;
-	font-size: .9vw;
+    position: static;
+    left: 105px;
+    top: 10px;
+    width: 75px;
+    font-size: .9vw;
 }
+
 #show_grid {
-	position: static;
-	left: 185px;
-	top: 10px;
-	width: 10vw;
-	font-size: 01vw;
+    position: static;
+    left: 185px;
+    top: 10px;
+    width: 10vw;
+    font-size: 01vw;
 }
+
 #hide_grid {
-	position: static;
-	left: 270px;
-	top: 10px;
-	width: 10vw;
-	font-size: 01vw;
+    position: static;
+    left: 270px;
+    top: 10px;
+    width: 10vw;
+    font-size: 01vw;
 }
+
 /*
 toolbox css
 */
 .toolbar_butt {
-	width: 7.5vw;
-	height: 3vh;
-	font-size: .9vw;
+    width: 7.5vw;
+    height: 3vh;
+    font-size: .9vw;
 }
+
 .toolbar_label {
-	padding-right: 5vw;
-	height: 03vh;
-	font-size: 01vw;
+    padding-right: 5vw;
+    height: 03vh;
+    font-size: 01vw;
 }
+
 .toolbar_input {
-	width: 30%;
-	height: 3%;
-	font-size: 01vw;
+    width: 30%;
+    height: 3%;
+    font-size: 01vw;
 }
