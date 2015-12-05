@@ -1,5 +1,10 @@
-// Adds the grid to the scene
+/**
+ * Functions for adding a grid to the scene
+ */
+// holds the line objects for the grid for hiding/showing
 var grid = [];
+
+// adds the grid to the scene
 function addGrid() {
     var gridOpacity = .4;
     var distance = new THREE.Vector3(camera.far, 0, 0);
@@ -29,6 +34,11 @@ function addGrid() {
     });
     addLine(distance, distance2, material);
 }
+
+// adds individual lines to the scene
+// @param distance vector for first line point
+// @param distance2 vector for the second line point
+// @param material the material for the line
 function addLine(distance, distance2, material) {
     var geometry = new THREE.Geometry();
     geometry.vertices.push(new THREE.Vector3(0, 0, 0));
@@ -40,12 +50,14 @@ function addLine(distance, distance2, material) {
     grid.push(line);
     scene.add(line);
 }
+// hides the grid
 function hideGrid() {
     for (var line in grid) {
         grid[line].visible = false;
     }
 }
 
+// shows the grid
 function showGrid() {
     for (var line in grid) {
         grid[line].visible = true;

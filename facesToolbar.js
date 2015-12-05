@@ -1,6 +1,15 @@
+/**
+ * Functions for manipulating the faces of an object via a gui
+ */
+
+// The selected face being edited
 var selectedFace;
+// The gui for editing faces
 var faceGui;
+// Variables being tracked in the gui
 var faceParameters;
+
+// adds the gui to the html
 function displayFaceEditor(selectedFace) {
     faceEditor.empty();
     this.selectedFace = selectedFace;
@@ -14,6 +23,8 @@ function displayFaceEditor(selectedFace) {
         faceEditor.append(faceGui.domElement);
     }
 }
+
+// establishes the starting value for the parameters being tracked
 function generateFaceParameterList() {
     faceParameters =
     {
@@ -37,6 +48,8 @@ function generateFaceParameterList() {
         matIndex: selectedFace.materialIndex
     };
 }
+
+// builds the folders for the gui
 function generateVertexFolder() {
     var folder1 = faceGui.addFolder('Vertex A');
     var aXValue = folder1.add(faceParameters, "vertexAXPos").min(-50).max(50).step(1).listen();

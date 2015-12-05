@@ -1,3 +1,6 @@
+/**
+ * Creates the starting scene and listens for user input and changes to manipulate the scene
+ **/
 // Makes sure to call the init / render functions before ANY other functions on the page. Safety
 $(function () {
     init();
