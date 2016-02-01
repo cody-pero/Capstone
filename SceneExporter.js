@@ -1,5 +1,7 @@
 /**
  * @author alteredq / http://alteredqualia.com/
+ *
+ * Used when exporting a scene
  */
 
 THREE.SceneExporter = function () {

@@ -1,6 +1,8 @@
 /**
  * @author alteredq / http://alteredqualia.com/
  * @author mr.doob / http://mrdoob.com/
+ *
+ * Used as a safety check to figure out what type of renderer to use
  */
 
 Detector = {

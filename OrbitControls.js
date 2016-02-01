@@ -4,6 +4,8 @@
  * @author alteredq / http://alteredqualia.com/
  * @author WestLangley / http://github.com/WestLangley
  * @author erich666 / http://erichaines.com
+ *
+ * Used for the camera controls
  */
 /*global THREE, console */
 
@@ -368,7 +370,7 @@
         this.enableKeys = true;
 
         // The four arrow keys
-        this.keys = {LEFT: 37, UP: 38, RIGHT: 39, BOTTOM: 40};
+        //this.keys = {LEFT: 37, UP: 38, RIGHT: 39, BOTTOM: 40};
 
         // Mouse buttons
         this.mouseButtons = {

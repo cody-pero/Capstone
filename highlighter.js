@@ -23,9 +23,12 @@ function createHighlighter() {
     outlineMesh.position.x = mesh.position.x;
     outlineMesh.position.y = mesh.position.y;
     outlineMesh.position.z = mesh.position.z;
-    outlineMesh.scale.x = mesh.scale.x + .1;
-    outlineMesh.scale.y = mesh.scale.y + .1;
-    outlineMesh.scale.z = mesh.scale.z + .1;
+    outlineMesh.scale.x = mesh.scale.x + (mesh.scale.x * .1);
+    outlineMesh.scale.y = mesh.scale.y + (mesh.scale.y * .1);
+    outlineMesh.scale.z = mesh.scale.z + (mesh.scale.z * .1);
+    outlineMesh.rotation.x = mesh.rotation.x;
+    outlineMesh.rotation.y = mesh.rotation.y;
+    outlineMesh.rotation.z = mesh.rotation.z;
     scene.add(outlineMesh);
     highlighted = true;
 }
@@ -51,9 +54,9 @@ function moveHighlighter() {
 
 // rescales the highlighter to the new size of the mesh
 function rescaleHighlighter() {
-    outlineMesh.scale.x = mesh.scale.x;
-    outlineMesh.scale.y = mesh.scale.y;
-    outlineMesh.scale.z = mesh.scale.z;
+    outlineMesh.scale.x = mesh.scale.x + (mesh.scale.x * .1);
+    outlineMesh.scale.y = mesh.scale.y + (mesh.scale.y * .1);
+    outlineMesh.scale.z = mesh.scale.z + (mesh.scale.z * .1);
 }
 
 // deletes the highlighter from the scene

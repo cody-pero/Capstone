@@ -88,10 +88,44 @@ function update() {
     // Updates any key flags in the keyboard object
     keyboard.update();
     // Checks for various keyboard input
-    if (keyboard.up("e")) {
+    if(keyboard.up("c")) {
+        document.getElementById('shapeSelector').value = "Cube";
+        generateMesh();
+    } else if(keyboard.up("s")) {
+        document.getElementById('shapeSelector').value = "Sphere";
+        generateMesh();
+    } else if(keyboard.up("y")) {
+        document.getElementById('shapeSelector').value = "Cylinder";
+        generateMesh();
+    } else if(keyboard.up("l")) {
+        document.getElementById('shapeSelector').value = "Plane";
+        generateMesh();
+    }
+    if(keyboard.pressed("shift") && keyboard.up("e")) {
         mode = "explode";
-    } else if (keyboard.up("p")) {
+        alert("exploded");
+    }else if(keyboard.up("up")) {
+        mesh.position.y += 1;
+        moveHighlighter();
+    }else if(keyboard.up("down")) {
+        mesh.position.y -= 1;
+        moveHighlighter();
+    }else if(keyboard.up("left")) {
+        mesh.position.x -= 1;
+        moveHighlighter();
+    }else if(keyboard.up("right")) {
+        mesh.position.x += 1;
+        moveHighlighter();
+    }else if(keyboard.up("pageup")) {
+        mesh.position.z += 1;
+        moveHighlighter();
+    }else if(keyboard.up("pagedown")) {
+        mesh.position.z -= 1;
+        moveHighlighter();
+    }
+    if (keyboard.up("p")) {
         mode = "picking";
+        alert("picking");
     }
     // Updates the camera controls
     controls.update();
@@ -162,12 +196,13 @@ function onMouseClick(event) {
         }
         // If explode is enabled the first intersected face is also selected and the face editor
         // is displayed
-        if (mode == "explode") {
+        // Updates the mesh editor div
+        changeEditorDiv();
+        if ( mode == "explode" ) {
             selectedFace = intersects[0].face;
             displayFaceEditor(selectedFace);
         }
-        // Updates the mesh editor div
-        changeEditorDiv();
+
     } else {
         // Nothing was intersected so the editors are cleared
         cleanupHighlighter();
@@ -180,40 +215,42 @@ function onMouseClick(event) {
 //**************************************************************************************************
 //******************************Stuff that makes the buttons work***********************************
 
+function generateMesh() {
+    var geometry, mesh, material;
+    if (document.getElementById('shapeSelector').value == 'Point Light') {
+        alert("does nothing yet");
+    } else {
+        if (document.getElementById('shapeSelector').value == 'Cube') {
+            geometry = new THREE.BoxGeometry(1, 1, 1, 1, 1, 1);
+        } else if (document.getElementById('shapeSelector').value == 'Plane') {
+            geometry = new THREE.PlaneGeometry(1, 1, 1, 1);
+        } else if (document.getElementById('shapeSelector').value == 'Sphere') {
+            geometry = new THREE.SphereGeometry(1, 8, 6, 0, 6.3, 0, 3.14);
+        } else if (document.getElementById('shapeSelector').value == 'Cylinder') {
+            geometry = new THREE.CylinderGeometry(1, 1, 1, 8, 1, false, 0, 6.3);
+        }
+        // Material for the new mesh
+        material = new THREE.MeshLambertMaterial({
+            color: 0xff0000,
+            vertexColors: THREE.FaceColors
+        });
+        material.vertexColors = THREE.FaceColors;
+        material.transparent = true;
+        mesh = new THREE.Mesh(geometry, material);
+        mesh.geometry.dynamic = true;
+        mesh.name = document.getElementById('shapeSelector').value + id;
 
+        id++;
+        scene.add(mesh);
+        // Repopulates the selectMesh dropdown list with the new mesh name
+        rebuildDropDown();
+    }
+}
 function addEventListeners() {
     // Handles adding a new mesh to the scene by reading in the selected drop down item and creating
     // the proper geometry
     document.getElementById('place_butt').onclick = function () {
-        var geometry, mesh, material;
-        if (document.getElementById('shapeSelector').value == 'Point Light') {
-            alert("does nothing yet");
-        } else {
-            if (document.getElementById('shapeSelector').value == 'Cube') {
-                geometry = new THREE.BoxGeometry(1, 1, 1, 1, 1, 1);
-            } else if (document.getElementById('shapeSelector').value == 'Plane') {
-                geometry = new THREE.PlaneGeometry(1, 1, 1, 1);
-            } else if (document.getElementById('shapeSelector').value == 'Sphere') {
-                geometry = new THREE.SphereGeometry(1, 8, 6, 0, 6.3, 0, 3.14);
-            } else if (document.getElementById('shapeSelector').value == 'Cylinder') {
-                geometry = new THREE.CylinderGeometry(1, 1, 1, 8, 1, false, 0, 6.3);
-            }
-            // Material for the new mesh
-            material = new THREE.MeshLambertMaterial({
-                color: 0xff0000,
-                vertexColors: THREE.FaceColors
-            });
-            material.vertexColors = THREE.FaceColors;
-            material.transparent = true;
-            mesh = new THREE.Mesh(geometry, material);
-            mesh.geometry.dynamic = true;
-            mesh.name = document.getElementById('shapeSelector').value + id;
-
-            id++;
-            scene.add(mesh);
-            // Repopulates the selectMesh dropdown list with the new mesh name
-            rebuildDropDown();
-        }
+        generateMesh();
     };// Shows grid
     document.getElementById('show_grid').onclick = function () {
         showGrid();

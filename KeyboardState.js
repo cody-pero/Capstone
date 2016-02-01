@@ -12,6 +12,8 @@
  *       keyboard.up("A")      -- true for one update cycle after key is released
  *
  *  See KeyboardState.k object data below for names of keys whose state can be polled
+ *
+ *  Used to keep track of keyboard key events
  */
 
 // initialization
@@ -32,7 +34,7 @@ KeyboardState.k =
     45: "insert", 46: "delete", 186: ";", 187: "=",
     188: ",", 189: "-", 190: ".", 191: "/",
     219: "[", 220: "\\", 221: "]", 222: "'",
-    69: "e", 80: "p"
+    69: "e", 80: "p", 67: "c", 83: "s", 89: "y", 76: "l"
 }
 
 KeyboardState.status = {};
@@ -95,6 +97,8 @@ KeyboardState.prototype.pressed = function (keyName) {
 KeyboardState.prototype.up = function (keyName) {
     return (KeyboardState.status[keyName] && KeyboardState.status[keyName].up);
 }
+
+
 
 KeyboardState.prototype.debug = function () {
     var list = "Keys active: ";

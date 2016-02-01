@@ -57,18 +57,21 @@ function generateVertexFolder() {
         mesh.geometry.vertices[selectedFace.a].x = value;
         mesh.geometry.__dirtyVertices = true;
         mesh.geometry.verticesNeedUpdate = true;
+        mesh.geometry.colorsNeedUpdate = true;
     });
     var aYValue = folder1.add(faceParameters, "vertexAYPos").min(-50).max(50).step(1).listen();
     aYValue.onChange(function (value) {
         mesh.geometry.vertices[selectedFace.a].y = value;
         mesh.geometry.__dirtyVertices = true;
         mesh.geometry.verticesNeedUpdate = true;
+        mesh.geometry.colorsNeedUpdate = true;
     });
     var aZValue = folder1.add(faceParameters, "vertexAZPos").min(-50).max(50).step(1).listen();
     aZValue.onChange(function (value) {
         mesh.geometry.vertices[selectedFace.a].z = value;
         mesh.geometry.__dirtyVertices = true;
         mesh.geometry.verticesNeedUpdate = true;
+        mesh.geometry.colorsNeedUpdate = true;
     });
 
     var folder2 = faceGui.addFolder('Vertex B');

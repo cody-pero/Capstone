@@ -1,5 +1,7 @@
 /**
  * @author alteredq / http://alteredqualia.com/
+ *
+ * Used for loading a scene
  */
 
 THREE.SceneLoader = function (manager) {

@@ -196,7 +196,6 @@ function setupScalingFolder() {
     mesh_Sca.onChange(function (value) {
         mesh.scale.set(value, value, value);
         rescaleHighlighter();
-        ;
     });
 }
 
