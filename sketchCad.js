@@ -91,17 +91,33 @@ function update() {
     if(keyboard.up("c")) {
         document.getElementById('shapeSelector').value = "Cube";
         generateMesh();
+        cleanupHighlighter();
+        createHighlighter();
+        editor.empty();
+        displayGeometryToolbar();
     } else if(keyboard.up("s")) {
         document.getElementById('shapeSelector').value = "Sphere";
         generateMesh();
+        cleanupHighlighter();
+        createHighlighter();
+        editor.empty();
+        displayGeometryToolbar();
     } else if(keyboard.up("y")) {
         document.getElementById('shapeSelector').value = "Cylinder";
         generateMesh();
+        cleanupHighlighter();
+        createHighlighter();
+        editor.empty();
+        displayGeometryToolbar();
     } else if(keyboard.up("l")) {
         document.getElementById('shapeSelector').value = "Plane";
         generateMesh();
+        cleanupHighlighter();
+        createHighlighter();
+        editor.empty();
+        displayGeometryToolbar();
     }
-    if(keyboard.pressed("shift") && keyboard.up("e")) {
+    if(keyboard.up("e")) {
         mode = "explode";
         alert("exploded");
     }else if(keyboard.up("up")) {
@@ -147,6 +163,9 @@ function rebuildDropDown() {
             var option = document.createElement("option");
             option.text = scene.children[i].name;
             option.value = scene.children[i].name;
+            if(mesh != undefined && option.text == mesh.name) {
+                option.selected = true;
+            }
             selectBox.add(option);
         }
     }
@@ -159,13 +178,15 @@ function changeEditorDiv() {
     mesh = scene.getObjectByName(document.getElementById('meshSelector').value);
     // If the selection is a mesh highlight and display editor if not (cameras, lights, etc)
     // do not highlight it
-    if (mesh instanceof THREE.Mesh) {
+    if (mesh.geometry instanceof THREE.Geometry) {
         createHighlighter();
         showHighlighter();
         editor.empty();
         displayGeometryToolbar();
-    } else {
-        hideHighlighter();
+    }else if(mesh instanceof THREE.Camera) {
+        editor.empty();
+    }else if(mesh instanceof THREE.Light) {
+        editor.empty();
     }
 }
 //**************************************************************************************************
@@ -203,7 +224,8 @@ function onMouseClick(event) {
             displayFaceEditor(selectedFace);
         }
 
-    } else {
+    }
+    /*else {
         // Nothing was intersected so the editors are cleared
         cleanupHighlighter();
         // De-selects the previously selected mesh in the ddl
@@ -211,12 +233,13 @@ function onMouseClick(event) {
         editor.empty();
         faceEditor.empty();
     }
+    */
 }
 //**************************************************************************************************
 //******************************Stuff that makes the buttons work***********************************
 
 function generateMesh() {
-    var geometry, mesh, material;
+    var geometry, localMesh, material;
     if (document.getElementById('shapeSelector').value == 'Point Light') {
         alert("does nothing yet");
     } else {
@@ -236,12 +259,13 @@ function generateMesh() {
         });
         material.vertexColors = THREE.FaceColors;
         material.transparent = true;
-        mesh = new THREE.Mesh(geometry, material);
-        mesh.geometry.dynamic = true;
-        mesh.name = document.getElementById('shapeSelector').value + id;
+        localMesh = new THREE.Mesh(geometry, material);
+        localMesh.geometry.dynamic = true;
+        localMesh.name = document.getElementById('shapeSelector').value + id;
 
         id++;
-        scene.add(mesh);
+        scene.add(localMesh);
+        mesh = localMesh;
         // Repopulates the selectMesh dropdown list with the new mesh name
         rebuildDropDown();
     }

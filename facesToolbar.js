@@ -56,22 +56,28 @@ function generateVertexFolder() {
     aXValue.onChange(function (value) {
         mesh.geometry.vertices[selectedFace.a].x = value;
         mesh.geometry.__dirtyVertices = true;
+        mesh.geometry.__dirtyColors = true;
         mesh.geometry.verticesNeedUpdate = true;
         mesh.geometry.colorsNeedUpdate = true;
+        mesh.material.needsUpdate = true;
     });
     var aYValue = folder1.add(faceParameters, "vertexAYPos").min(-50).max(50).step(1).listen();
     aYValue.onChange(function (value) {
         mesh.geometry.vertices[selectedFace.a].y = value;
         mesh.geometry.__dirtyVertices = true;
+        mesh.geometry.__dirtyColors = true;
         mesh.geometry.verticesNeedUpdate = true;
         mesh.geometry.colorsNeedUpdate = true;
+        mesh.material.needsUpdate = true;
     });
     var aZValue = folder1.add(faceParameters, "vertexAZPos").min(-50).max(50).step(1).listen();
     aZValue.onChange(function (value) {
         mesh.geometry.vertices[selectedFace.a].z = value;
         mesh.geometry.__dirtyVertices = true;
         mesh.geometry.verticesNeedUpdate = true;
+        geometry.__dirtyColors = true;
         mesh.geometry.colorsNeedUpdate = true;
+        mesh.material.needsUpdate = true;
     });
 
     var folder2 = faceGui.addFolder('Vertex B');
@@ -79,19 +85,25 @@ function generateVertexFolder() {
     bXValue.onChange(function (value) {
         mesh.geometry.vertices[selectedFace.a].x = value;
         mesh.geometry.__dirtyVertices = true;
+        geometry.__dirtyColors = true;
         mesh.geometry.verticesNeedUpdate = true;
+        mesh.material.needsUpdate = true;
     });
     var bYValue = folder2.add(faceParameters, "vertexBYPos").min(-50).max(50).step(1).listen();
     bYValue.onChange(function (value) {
         mesh.geometry.vertices[selectedFace.a].y = value;
         mesh.geometry.__dirtyVertices = true;
+        mesh.geometry.__dirtyColors = true;
         mesh.geometry.verticesNeedUpdate = true;
+        mesh.material.needsUpdate = true;
     });
     var bZValue = folder2.add(faceParameters, "vertexBZPos").min(-50).max(50).step(1).listen();
     bZValue.onChange(function (value) {
         mesh.geometry.vertices[selectedFace.a].z = value;
         mesh.geometry.__dirtyVertices = true;
+        mesh.geometry.__dirtyColors = true;
         mesh.geometry.verticesNeedUpdate = true;
+        mesh.material.needsUpdate = true;
     });
 
     var folder3 = faceGui.addFolder('Vertex C');
@@ -99,19 +111,25 @@ function generateVertexFolder() {
     cXValue.onChange(function (value) {
         mesh.geometry.vertices[selectedFace.a].x = value;
         mesh.geometry.__dirtyVertices = true;
+        mesh.geometry.__dirtyColors = true;
         mesh.geometry.verticesNeedUpdate = true;
+        mesh.material.needsUpdate = true;
     });
     var cYValue = folder3.add(faceParameters, "vertexCYPos").min(-50).max(50).step(1).listen();
     cYValue.onChange(function (value) {
         mesh.geometry.vertices[selectedFace.a].y = value;
         mesh.geometry.__dirtyVertices = true;
+        mesh.geometry.__dirtyColors = true;
         mesh.geometry.verticesNeedUpdate = true;
+        mesh.material.needsUpdate = true;
     });
     var cZValue = folder3.add(faceParameters, "vertexCZPos").min(-50).max(50).step(1).listen();
     cZValue.onChange(function (value) {
         mesh.geometry.vertices[selectedFace.a].z = value;
         mesh.geometry.__dirtyVertices = true;
+        mesh.geometry.__dirtyColors = true;
         mesh.geometry.verticesNeedUpdate = true;
+        mesh.material.needsUpdate = true;
     });
     var folder4 = faceGui.addFolder('Extrude Face');
     var extrudeLength = folder4.add(faceParameters,
@@ -138,7 +156,9 @@ function generateVertexFolder() {
         mesh.geometry.vertices[selectedFace.c].z = mesh.geometry.vertices[selectedFace.c].z +
             (value * selectedFace.normal.z);
         mesh.geometry.__dirtyVertices = true;
+        mesh.geometry.__dirtyColors = true;
         mesh.geometry.verticesNeedUpdate = true;
+
     });
 
 }
