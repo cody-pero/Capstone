@@ -74,6 +74,7 @@ function init() {
     // Creates the list in the drop down of scene elements
     rebuildDropDown();
     addEventListeners();
+    THREEx.WindowResize(renderer, camera);
 }
 
 // Renderer function
