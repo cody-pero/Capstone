@@ -17,13 +17,17 @@ var container, scene, camera, renderer, controls, mesh;
 // editor - div element containing the mesh editor functionality
 // faceEditor - div element containing the face editor functionality
 // selectedFace - currently selected face
-var editor, faceEditor, mode, selectedFace;
+var editor, faceEditor, mode, selectedFace, partParameters;
 
 // used for getting keyboard commands
 var keyboard = new KeyboardState();
 // next available id ******************* check out a way to carry over the id value to avoid
 // duplicates when saving/loading
 var id = 0;
+
+var listOfSystems=[];
+
+var clock = new THREE.Clock();
 //*************************************************************************************************
 //***************************************Required Three.js functions*******************************
 // Initializes all the starting three.js stuff
@@ -51,7 +55,7 @@ function init() {
     camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
     camera.name = "Camera";
     scene.add(camera);
-    camera.position.set(100, 100, 100);
+    camera.position.set(400, 400, 400);
 
     // Sets up Camera Controls
     controls = new THREE.OrbitControls(camera, renderer.domElement);
@@ -69,6 +73,32 @@ function init() {
     // Adds the event listener for the mesh picking event
     container.addEventListener('mouseup', onMouseClick, false);
 
+    /////////////////////////////////////Particle test region///////////////////////////////////////
+    // FLOOR
+    var floorTexture = new THREE.ImageUtils.loadTexture('images/checkerboard.jpg');
+    floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
+    floorTexture.repeat.set(10, 10);
+    var floorMaterial = new THREE.MeshBasicMaterial({
+        color: 0x444444,
+        map: floorTexture,
+        side: THREE.DoubleSide
+    });
+    var floorGeometry = new THREE.PlaneGeometry(100, 100, 1, 1);
+    var floor = new THREE.Mesh(floorGeometry, floorMaterial);
+    floor.position.y = -10.5;
+    floor.name = "Floor";
+    floor.rotation.x = Math.PI / 2;
+    scene.add(floor);
+    var skyBoxGeometry = new THREE.BoxGeometry(4000, 4000, 4000);
+    var skyBoxMaterial = new THREE.MeshBasicMaterial({color: 0x000000, side: THREE.BackSide});
+    var skyBox = new THREE.Mesh(skyBoxGeometry, skyBoxMaterial);
+    skyBox.name = "Skybox";
+    scene.add(skyBox);
+    ////////////
+    // CUSTOM //
+    ////////////
+
+
     // Adds the grid to the scene
     addGrid();
     // Creates the list in the drop down of scene elements
@@ -77,15 +107,20 @@ function init() {
     THREEx.WindowResize(renderer, camera);
 }
 
+
+
+
 // Renderer function
 function render() {
     requestAnimationFrame(render);
     renderer.render(scene, camera);
     update();
-
 }
 // Update function used to update camera controls and trigger on keyboard input events
 function update() {
+    for (var index = 0; index < listOfSystems.length; index++){
+        listOfSystems[index].updateParticles();
+    }
     // Updates any key flags in the keyboard object
     keyboard.update();
     // Checks for various keyboard input
@@ -142,6 +177,7 @@ function update() {
     }
     if (keyboard.up("p")) {
         mode = "picking";
+        faceEditor.empty();
         alert("picking");
     }
     // Updates the camera controls
@@ -179,7 +215,15 @@ function changeEditorDiv() {
     mesh = scene.getObjectByName(document.getElementById('meshSelector').value);
     // If the selection is a mesh highlight and display editor if not (cameras, lights, etc)
     // do not highlight it
-    if (mesh.geometry instanceof THREE.Geometry) {
+    if(mesh.name == "Skybox"){
+    }else if(mesh instanceof THREE.PointCloud) {
+        for (var index = 0; index < listOfSystems.length; index++) {
+            if (listOfSystems[index].particleGroup == mesh) {
+                editor.empty();
+                listOfSystems[index].displayGUI();
+            }
+        }
+    }else if (mesh.geometry instanceof THREE.Geometry) {
         createHighlighter();
         showHighlighter();
         editor.empty();
@@ -243,6 +287,16 @@ function generateMesh() {
     var geometry, localMesh, material;
     if (document.getElementById('shapeSelector').value == 'Point Light') {
         alert("does nothing yet");
+    } else if(document.getElementById('shapeSelector').value == 'Particle System'){
+        var particleGroup = new makeParticleSystem();
+        particleGroup.particleGroup.name = "Particle System " + id;
+        id++;
+        listOfSystems.push(particleGroup);
+        scene.add(particleGroup.particleGroup);
+        mesh = particleGroup.particleGroup;
+        rebuildDropDown();
+        changeEditorDiv();
+
     } else {
         if (document.getElementById('shapeSelector').value == 'Cube') {
             geometry = new THREE.BoxGeometry(1, 1, 1, 1, 1, 1);
@@ -269,6 +323,8 @@ function generateMesh() {
         mesh = localMesh;
         // Repopulates the selectMesh dropdown list with the new mesh name
         rebuildDropDown();
+        editor.empty();
+        displayGeometryToolbar();
     }
 }
 function addEventListeners() {
