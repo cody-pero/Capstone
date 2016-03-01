@@ -75,20 +75,7 @@ function init() {
 
     /////////////////////////////////////Particle test region///////////////////////////////////////
     // FLOOR
-    var floorTexture = new THREE.ImageUtils.loadTexture('images/checkerboard.jpg');
-    floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
-    floorTexture.repeat.set(10, 10);
-    var floorMaterial = new THREE.MeshBasicMaterial({
-        color: 0x444444,
-        map: floorTexture,
-        side: THREE.DoubleSide
-    });
-    var floorGeometry = new THREE.PlaneGeometry(100, 100, 1, 1);
-    var floor = new THREE.Mesh(floorGeometry, floorMaterial);
-    floor.position.y = -10.5;
-    floor.name = "Floor";
-    floor.rotation.x = Math.PI / 2;
-    scene.add(floor);
+    scene.add(createFloor());
     var skyBoxGeometry = new THREE.BoxGeometry(4000, 4000, 4000);
     var skyBoxMaterial = new THREE.MeshBasicMaterial({color: 0x000000, side: THREE.BackSide});
     var skyBox = new THREE.Mesh(skyBoxGeometry, skyBoxMaterial);
@@ -109,6 +96,23 @@ function init() {
 
 
 
+function createFloor(){
+    var floorTexture = new THREE.ImageUtils.loadTexture('images/checkerboard.jpg');
+    floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
+    floorTexture.repeat.set(10, 10);
+    var floorMaterial = new THREE.MeshBasicMaterial({
+        color: 0x444444,
+        map: floorTexture,
+        side: THREE.DoubleSide
+    });
+    var floorGeometry = new THREE.PlaneGeometry(100, 100, 1, 1);
+    var floor = new THREE.Mesh(floorGeometry, floorMaterial);
+    floor.position.y = -10.5;
+    floor.name = "Floor";
+    floor.userData = "floor";
+    floor.rotation.x = Math.PI / 2;
+    return floor;
+}
 
 // Renderer function
 function render() {
@@ -375,6 +379,29 @@ function addEventListeners() {
         sceneLoader.parse(JSON.parse(json), function (e) {
             scene = e.scene;
         }, '.');
+        for(var i = 0; i < scene.children.length; i++){
+            if(scene.children[i].userData == "floor"){
+                scene.remove(scene.children[i]);
+
+                var floorTexture = new THREE.ImageUtils.loadTexture('images/checkerboard.jpg');
+                floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
+                floorTexture.repeat.set(10, 10);
+                var floorMaterial = new THREE.MeshBasicMaterial({
+                    color: 0x444444,
+                    map: floorTexture,
+                    side: THREE.DoubleSide
+                });
+                var floorGeometry = new THREE.PlaneGeometry(100, 100, 1, 1);
+                var floor = new THREE.Mesh(floorGeometry, floorMaterial);
+                floor.position.y = -10.5;
+                floor.name = "Floor2";
+                floor.userData = "floor";
+                floor.rotation.x = Math.PI / 2;
+
+                scene.add(floor);
+                render();
+            }
+        }
         rebuildDropDown();
         addGrid();
         var SCREEN_WIDTH = container.clientWidth, SCREEN_HEIGHT = container.clientHeight;
@@ -382,9 +409,11 @@ function addEventListeners() {
         camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
         camera.name = "Camera";
         scene.add(camera);
-        camera.position.set(100, 100, 100);
+        camera.position.set(400, 400, 400);
 
         // Camera Controls
         controls = new THREE.OrbitControls(camera, renderer.domElement);
+        addEventListeners();
+        THREEx.WindowResize(renderer, camera);
     }
 }
