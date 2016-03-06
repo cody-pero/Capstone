@@ -4,17 +4,17 @@
 // default settings for the particles mostly 0 for anything that causes it to move, and a small
 // cube pattern to the randomization of vertices
 var particleAttributes = {
-    pVelX : 0.0,
+    pVelX: 0.0,
     pPosXLower: -5.0,
     pPosXUpper: 5.0,
     pPosYLower: -5.0,
     pPosYUpper: 5.0,
     pPosZLower: -5.0,
     pPosZUpper: 5.0,
-    pVelY : 0.0,
-    pVelZ : 0.0,
+    pVelY: 0.0,
+    pVelZ: 0.0,
     numParticles: 100,
-    opacity:.9,
+    opacity: .9,
     size: 15,
     transparent: true,
     map: "snowflake",
@@ -26,8 +26,11 @@ var particleAttributes = {
     bValueMin: 0,
     rValueMax: 1,
     gValueMax: 1,
-    bValueMax: 1
-
+    bValueMax: 1,
+    groupXrot: 0,
+    groupYrot: 0,
+    groupZrot: 0,
+    flip: 1
 };
 function makeParticleSystem( attributes ) {
     this.particleGroup = initializeSystem();
@@ -39,6 +42,7 @@ function makeParticleSystem( attributes ) {
 }
 
 makeParticleSystem.prototype.updateParticles = function() {
+    var time = 4*clock.getElapsedTime();
     var vertices = this.particleGroup.geometry.vertices;
     this.particleGroup.geometry.verticesNeedUpdate = true;
     this.particleGroup.material.colorsNeedUpdate = true;
@@ -66,6 +70,11 @@ makeParticleSystem.prototype.updateParticles = function() {
             v.z = particleAttributes.pPosZLower;
         }
     }
+    this.particleGroup.rotation.x = time * particleAttributes.groupXrot;
+    this.particleGroup.rotation.y = time * particleAttributes.groupYrot;
+    this.particleGroup.rotation.z = time * particleAttributes.groupZrot;
+
+
 };
 makeParticleSystem.prototype.displayGUI = function() {
     this.particleGUI = new dat.GUI();
@@ -87,6 +96,19 @@ makeParticleSystem.prototype.makeGUI = function() {
         }
     };
     this.particleGUI.add(obj, 'Redistribute_Particles');
+    obj = {
+        Delete_Mesh: function () {
+            scene.remove(mesh);
+            cleanupHighlighter();
+            editor.empty();
+            faceEditor.empty();
+            rebuildDropDown();
+        }
+    };
+    this.particleGUI.add(obj, 'Delete_Mesh');
+    // Opens the gui clears the editor div and appends the gui to the div
+    this.particleGUI.open();
+    editor.append(this.particleGUI.domElement);
 };
 
 makeParticleSystem.prototype.setupFolder1 = function() {
@@ -160,6 +182,29 @@ makeParticleSystem.prototype.setupFolder2 = function() {
     eNumParticles.onChange(function(value) {
         particleAttributes.numParticles = value;
     });
+    var eXrot = folder2.add(particleAttributes, "groupXrot")
+        .min(0).max(3).step(.1).listen();
+    eXrot.onChange(function(value) {
+        particleAttributes.groupXrot = value;
+    });
+    var eYrot = folder2.add(particleAttributes, "groupYrot")
+        .min(0).max(3).step(.1).listen();
+    eYrot.onChange(function(value) {
+        particleAttributes.groupYrot = value;
+    });
+    var eZrot = folder2.add(particleAttributes, "groupZrot")
+        .min(0).max(3).step(.1).listen();
+    eZrot.onChange(function(value) {
+        particleAttributes.groupZrot = value;
+    });
+    var obj = {
+        Delete: function () {
+            removeOldSystem();
+            editor.empty();
+        }
+    };
+    folder2.add(obj, 'Delete');
+
 
 };
 makeParticleSystem.prototype.setupFolder3 = function() {
@@ -244,6 +289,7 @@ function removeOldSystem() {
     }
     scene.remove(mesh);
     rebuildDropDown();
+
 }
 function initializeSystem(){
 

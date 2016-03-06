@@ -62,7 +62,7 @@ function init() {
 
     // Add Default Lights
     var light = new THREE.PointLight(0xffffff);
-    light.position.set(-200, 200, 200);
+    light.position.set(-20, 20, 20);
     light.name = "Default Point Light";
     var light2 = new THREE.AmbientLight(0x333333);
     light2.position.set(light.position);
@@ -72,8 +72,7 @@ function init() {
 
     // Adds the event listener for the mesh picking event
     container.addEventListener('mouseup', onMouseClick, false);
-
-    /////////////////////////////////////Particle test region///////////////////////////////////////
+/*
     // FLOOR
     scene.add(createFloor());
     var skyBoxGeometry = new THREE.BoxGeometry(4000, 4000, 4000);
@@ -84,7 +83,7 @@ function init() {
     ////////////
     // CUSTOM //
     ////////////
-
+*/
 
     // Adds the grid to the scene
     addGrid();
@@ -213,6 +212,9 @@ function rebuildDropDown() {
 }
 // Function for updating the mesh editor div based off the mesh being selected
 function changeEditorDiv() {
+    if(lightHelper != undefined) {
+        scene.remove(lightHelper);
+    }
     // hides the highlighter
     cleanupHighlighter();
     // The currently selected mesh
@@ -227,14 +229,15 @@ function changeEditorDiv() {
                 listOfSystems[index].displayGUI();
             }
         }
+    }else if(mesh instanceof THREE.Light) {
+        editor.empty();
+        displayLightToolbar();
     }else if (mesh.geometry instanceof THREE.Geometry) {
         createHighlighter();
         showHighlighter();
         editor.empty();
         displayGeometryToolbar();
     }else if(mesh instanceof THREE.Camera) {
-        editor.empty();
-    }else if(mesh instanceof THREE.Light) {
         editor.empty();
     }
 }
@@ -290,7 +293,27 @@ function onMouseClick(event) {
 function generateMesh() {
     var geometry, localMesh, material;
     if (document.getElementById('shapeSelector').value == 'Point Light') {
-        alert("does nothing yet");
+        var light = new THREE.PointLight(0xffffff);
+        light.position.set(-200, 200, 200);
+        light.name = "Point Light" + id;
+        scene.add(light);
+        mesh = light;
+        rebuildDropDown();
+        changeEditorDiv();
+    } else if(document.getElementById('shapeSelector').value == 'Ambient Light') {
+        var light = new THREE.AmbientLight(0x666666);
+        light.name = "Ambient Light" + id;
+        scene.add(light);
+        mesh = light;
+        rebuildDropDown();
+        changeEditorDiv();
+    } else if(document.getElementById('shapeSelector').value == 'Spot Light') {
+        var light = new THREE.SpotLight(0xffffff, 1.0, 0.0, Math.PI/3, 10.0, 1);
+        light.name = "Spot Light" + id;
+        scene.add(light);
+        mesh = light;
+        rebuildDropDown();
+        changeEditorDiv();
     } else if(document.getElementById('shapeSelector').value == 'Particle System'){
         var particleGroup = new makeParticleSystem();
         particleGroup.particleGroup.name = "Particle System " + id;
