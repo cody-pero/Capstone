@@ -25,7 +25,7 @@ var keyboard = new KeyboardState();
 // duplicates when saving/loading
 var id = 0;
 
-var listOfSystems=[];
+var listOfSystems = [];
 
 var clock = new THREE.Clock();
 //*************************************************************************************************
@@ -64,26 +64,28 @@ function init() {
     var light = new THREE.PointLight(0xffffff);
     light.position.set(-20, 20, 20);
     light.name = "Default Point Light";
+    light.userData = {TYPE: "light"};
     var light2 = new THREE.AmbientLight(0x333333);
     light2.position.set(light.position);
     light2.name = "Default Ambient Light";
+    light2.userData = {TYPE: "light"};
     scene.add(light2);
     scene.add(light);
 
     // Adds the event listener for the mesh picking event
     container.addEventListener('mouseup', onMouseClick, false);
-/*
-    // FLOOR
-    scene.add(createFloor());
-    var skyBoxGeometry = new THREE.BoxGeometry(4000, 4000, 4000);
-    var skyBoxMaterial = new THREE.MeshBasicMaterial({color: 0x000000, side: THREE.BackSide});
-    var skyBox = new THREE.Mesh(skyBoxGeometry, skyBoxMaterial);
-    skyBox.name = "Skybox";
-    scene.add(skyBox);
-    ////////////
-    // CUSTOM //
-    ////////////
-*/
+    /*
+     // FLOOR
+     scene.add(createFloor());
+     var skyBoxGeometry = new THREE.BoxGeometry(4000, 4000, 4000);
+     var skyBoxMaterial = new THREE.MeshBasicMaterial({color: 0x000000, side: THREE.BackSide});
+     var skyBox = new THREE.Mesh(skyBoxGeometry, skyBoxMaterial);
+     skyBox.name = "Skybox";
+     scene.add(skyBox);
+     ////////////
+     // CUSTOM //
+     ////////////
+     */
 
     // Adds the grid to the scene
     addGrid();
@@ -94,8 +96,7 @@ function init() {
 }
 
 
-
-function createFloor(){
+function createFloor() {
     var floorTexture = new THREE.ImageUtils.loadTexture('images/checkerboard.jpg');
     floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
     floorTexture.repeat.set(10, 10);
@@ -121,34 +122,34 @@ function render() {
 }
 // Update function used to update camera controls and trigger on keyboard input events
 function update() {
-    for (var index = 0; index < listOfSystems.length; index++){
+    for (var index = 0; index < listOfSystems.length; index++) {
         listOfSystems[index].updateParticles();
     }
     // Updates any key flags in the keyboard object
     keyboard.update();
     // Checks for various keyboard input
-    if(keyboard.up("c")) {
+    if (keyboard.up("c")) {
         document.getElementById('shapeSelector').value = "Cube";
         generateMesh();
         cleanupHighlighter();
         createHighlighter();
         editor.empty();
         displayGeometryToolbar();
-    } else if(keyboard.up("s")) {
+    } else if (keyboard.up("s")) {
         document.getElementById('shapeSelector').value = "Sphere";
         generateMesh();
         cleanupHighlighter();
         createHighlighter();
         editor.empty();
         displayGeometryToolbar();
-    } else if(keyboard.up("y")) {
+    } else if (keyboard.up("y")) {
         document.getElementById('shapeSelector').value = "Cylinder";
         generateMesh();
         cleanupHighlighter();
         createHighlighter();
         editor.empty();
         displayGeometryToolbar();
-    } else if(keyboard.up("l")) {
+    } else if (keyboard.up("l")) {
         document.getElementById('shapeSelector').value = "Plane";
         generateMesh();
         cleanupHighlighter();
@@ -156,25 +157,25 @@ function update() {
         editor.empty();
         displayGeometryToolbar();
     }
-    if(keyboard.up("e")) {
+    if (keyboard.up("e")) {
         mode = "explode";
         alert("exploded");
-    }else if(keyboard.up("up")) {
+    } else if (keyboard.up("up")) {
         mesh.position.y += 1;
         moveHighlighter();
-    }else if(keyboard.up("down")) {
+    } else if (keyboard.up("down")) {
         mesh.position.y -= 1;
         moveHighlighter();
-    }else if(keyboard.up("left")) {
+    } else if (keyboard.up("left")) {
         mesh.position.x -= 1;
         moveHighlighter();
-    }else if(keyboard.up("right")) {
+    } else if (keyboard.up("right")) {
         mesh.position.x += 1;
         moveHighlighter();
-    }else if(keyboard.up("pageup")) {
+    } else if (keyboard.up("pageup")) {
         mesh.position.z += 1;
         moveHighlighter();
-    }else if(keyboard.up("pagedown")) {
+    } else if (keyboard.up("pagedown")) {
         mesh.position.z -= 1;
         moveHighlighter();
     }
@@ -203,7 +204,7 @@ function rebuildDropDown() {
             var option = document.createElement("option");
             option.text = scene.children[i].name;
             option.value = scene.children[i].name;
-            if(mesh != undefined && option.text == mesh.name) {
+            if (mesh != undefined && option.text == mesh.name) {
                 option.selected = true;
             }
             selectBox.add(option);
@@ -212,7 +213,7 @@ function rebuildDropDown() {
 }
 // Function for updating the mesh editor div based off the mesh being selected
 function changeEditorDiv() {
-    if(lightHelper != undefined) {
+    if (lightHelper != undefined) {
         scene.remove(lightHelper);
     }
     // hides the highlighter
@@ -221,23 +222,23 @@ function changeEditorDiv() {
     mesh = scene.getObjectByName(document.getElementById('meshSelector').value);
     // If the selection is a mesh highlight and display editor if not (cameras, lights, etc)
     // do not highlight it
-    if(mesh.name == "Skybox"){
-    }else if(mesh instanceof THREE.PointCloud) {
+    if (mesh.name == "Skybox") {
+    } else if (mesh instanceof THREE.PointCloud) {
         for (var index = 0; index < listOfSystems.length; index++) {
             if (listOfSystems[index].particleGroup == mesh) {
                 editor.empty();
                 listOfSystems[index].displayGUI();
             }
         }
-    }else if(mesh instanceof THREE.Light) {
+    } else if (mesh instanceof THREE.Light) {
         editor.empty();
         displayLightToolbar();
-    }else if (mesh.geometry instanceof THREE.Geometry) {
+    } else if (mesh.geometry instanceof THREE.Geometry) {
         createHighlighter();
         showHighlighter();
         editor.empty();
         displayGeometryToolbar();
-    }else if(mesh instanceof THREE.Camera) {
+    } else if (mesh instanceof THREE.Camera) {
         editor.empty();
     }
 }
@@ -271,21 +272,21 @@ function onMouseClick(event) {
         // is displayed
         // Updates the mesh editor div
         changeEditorDiv();
-        if ( mode == "explode" ) {
+        if (mode == "explode") {
             selectedFace = intersects[0].face;
             displayFaceEditor(selectedFace);
         }
 
     }
     /*else {
-        // Nothing was intersected so the editors are cleared
-        cleanupHighlighter();
-        // De-selects the previously selected mesh in the ddl
-        document.getElementById("meshSelector").selectedIndex = -1;
-        editor.empty();
-        faceEditor.empty();
-    }
-    */
+     // Nothing was intersected so the editors are cleared
+     cleanupHighlighter();
+     // De-selects the previously selected mesh in the ddl
+     document.getElementById("meshSelector").selectedIndex = -1;
+     editor.empty();
+     faceEditor.empty();
+     }
+     */
 }
 //**************************************************************************************************
 //******************************Stuff that makes the buttons work***********************************
@@ -294,29 +295,33 @@ function generateMesh() {
     var geometry, localMesh, material;
     if (document.getElementById('shapeSelector').value == 'Point Light') {
         var light = new THREE.PointLight(0xffffff);
+        light.userData = {TYPE: "light"};
         light.position.set(-200, 200, 200);
         light.name = "Point Light" + id;
         scene.add(light);
         mesh = light;
         rebuildDropDown();
         changeEditorDiv();
-    } else if(document.getElementById('shapeSelector').value == 'Ambient Light') {
+    } else if (document.getElementById('shapeSelector').value == 'Ambient Light') {
         var light = new THREE.AmbientLight(0x666666);
         light.name = "Ambient Light" + id;
+        light.userData = {TYPE: "light"};
         scene.add(light);
         mesh = light;
         rebuildDropDown();
         changeEditorDiv();
-    } else if(document.getElementById('shapeSelector').value == 'Spot Light') {
-        var light = new THREE.SpotLight(0xffffff, 1.0, 0.0, Math.PI/3, 10.0, 1);
+    } else if (document.getElementById('shapeSelector').value == 'Spot Light') {
+        var light = new THREE.SpotLight(0xffffff, 1.0, 0.0, Math.PI / 3, 10.0, 1);
         light.name = "Spot Light" + id;
+        light.userData = {TYPE: "light"};
         scene.add(light);
         mesh = light;
         rebuildDropDown();
         changeEditorDiv();
-    } else if(document.getElementById('shapeSelector').value == 'Particle System'){
+    } else if (document.getElementById('shapeSelector').value == 'Particle System') {
         var particleGroup = new makeParticleSystem();
         particleGroup.particleGroup.name = "Particle System " + id;
+        particleGroup.userData = {TYPE: "particle"};
         id++;
         listOfSystems.push(particleGroup);
         scene.add(particleGroup.particleGroup);
@@ -373,70 +378,61 @@ function addEventListeners() {
     };
 // Save scene
     document.getElementById('save_butt').onclick = function () {
-        /*
-         var retval = prompt("Please enter a filename: ");
-         var filename = retval;
-         */
-        var exporter = new THREE.SceneExporter();
-        var sceneJson = JSON.stringify(exporter.parse(scene));
-        localStorage.setItem('scene', sceneJson);
-        /*
-         //TODO DO NOT DELETE ANYTHING BELOW
-         var pom = document.createElement('a');
-         pom.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(sceneJson));
-         pom.setAttribute('download', filename);
-         if (document.createEvent) {
-         var event = document.createEvent('MouseEvents');
-         event.initEvent('click', true, true);
-         pom.dispatchEvent(event);
-         }
-         else {
-         pom.click();
-         }
-         */
-    };
-// Load scene
-    document.getElementById("load_butt").onclick = function () {
-        var json = (localStorage.getItem('scene'));
-        var sceneLoader = new THREE.SceneLoader();
-        sceneLoader.parse(JSON.parse(json), function (e) {
-            scene = e.scene;
-        }, '.');
-        for(var i = 0; i < scene.children.length; i++){
-            if(scene.children[i].userData == "floor"){
-                scene.remove(scene.children[i]);
-
-                var floorTexture = new THREE.ImageUtils.loadTexture('images/checkerboard.jpg');
-                floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
-                floorTexture.repeat.set(10, 10);
-                var floorMaterial = new THREE.MeshBasicMaterial({
-                    color: 0x444444,
-                    map: floorTexture,
-                    side: THREE.DoubleSide
-                });
-                var floorGeometry = new THREE.PlaneGeometry(100, 100, 1, 1);
-                var floor = new THREE.Mesh(floorGeometry, floorMaterial);
-                floor.position.y = -10.5;
-                floor.name = "Floor2";
-                floor.userData = "floor";
-                floor.rotation.x = Math.PI / 2;
-
-                scene.add(floor);
-                render();
+        var r = window.confirm("SketchCad currently does not support saving of particle systems. These " +
+            "items will cause issues when saving. Continue?")
+        if(r){
+            var retval = prompt("Please enter a filename: ");
+            var filename = retval;
+            var exporter = new THREE.SceneExporter();
+            var sceneJson = JSON.stringify(exporter.parse(scene));
+            localStorage.setItem('scene', sceneJson);
+            var pom = document.createElement('a');
+            pom.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(sceneJson));
+            pom.setAttribute('download', filename);
+            //create_default_lights();
+            if (document.createEvent) {
+                var event = document.createEvent('MouseEvents');
+                event.initEvent('click', true, true);
+                pom.dispatchEvent(event);
+            }
+            else {
+                pom.click();
             }
         }
-        rebuildDropDown();
-        addGrid();
-        var SCREEN_WIDTH = container.clientWidth, SCREEN_HEIGHT = container.clientHeight;
-        var VIEW_ANGLE = 2, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 1, FAR = 20000;
-        camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
-        camera.name = "Camera";
-        scene.add(camera);
-        camera.position.set(400, 400, 400);
+    };
 
-        // Camera Controls
-        controls = new THREE.OrbitControls(camera, renderer.domElement);
-        addEventListeners();
-        THREEx.WindowResize(renderer, camera);
+    function readSingleFile(evt) {
+        //Retrieve the first (and only!) File from the FileList object
+        var f = evt.target.files[0];
+
+        if (f) {
+            var r = new FileReader();
+            r.onload = function(e) {
+                var contents = e.target.result;
+                var sceneLoader = new THREE.SceneLoader();
+                sceneLoader.parse(JSON.parse(contents), function (e) {
+                    scene = e.scene;
+                }, '.');
+                rebuildDropDown();
+                addGrid();
+                var SCREEN_WIDTH = container.clientWidth, SCREEN_HEIGHT = container.clientHeight;
+                var VIEW_ANGLE = 2, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 1, FAR = 20000;
+                camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
+                camera.name = "Camera";
+                scene.add(camera);
+                camera.position.set(400, 400, 400);
+
+                // Camera Controls
+                controls = new THREE.OrbitControls(camera, renderer.domElement);
+                addEventListeners();
+                THREEx.WindowResize(renderer, camera);
+
+            }
+            r.readAsText(f);
+        } else {
+            alert("Failed to load file");
+        }
     }
+
+    document.getElementById('fileinput').addEventListener('change', readSingleFile, false);
 }
