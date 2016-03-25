@@ -22,6 +22,14 @@
     <script src="ParticleController.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="LightToolbar.js"></script>
+    <script src="helvetiker_regular.typeface.js"></script>
+    <script type ="text/javascript">
+        function updateSlider(slideAmount) {
+            var slideVal = $("#currSize");
+            slideVal.empty();
+            slideVal.append("Current Size:" + slideAmount);
+        }
+    </script>
 </head>
 
 <body>
@@ -36,8 +44,8 @@
         <button id="hide_grid">Hide Grid</button>
     </div>
     <div id="leftSideBarDiv">
-        <label>Select Shape Geometry</label>
-        <select id='shapeSelector'>
+        <label>Select Element to Add</label>
+        <select id='shapeSelector' style="width:100%">
             <option value="Cube">Cube</option>
             <option value="Sphere">Sphere</option>
             <option value="Cylinder">Cylinder</option>
@@ -47,14 +55,20 @@
             <option value="Ambient Light">Ambient Light</option>
             <option value="Spot Light">Spot Light</option>
         </select>
-        <button id="place_butt">Place Shape</button>
-        <label>Scene Elements</label>
-        <select id="meshSelector" size="2">
+        <button id="place_butt">Place Scene Element</button>
+        <div id="sizeSlider">
+            Scene Size <br />
+            10 <input id="sizeSlide" type = "range" min = "10" max = "100" step = "10"
+                  value = "10" onchange= "updateSlider(this.value)" /> 100 <br />
+           <div id = "currSize">Current Size: 10</div>
+        </div>
+        <label>Current Scene Elements</label>
+        <select id="meshSelector" size="4">
 
         </select>
 
         <div id="editorDiv">
-            <label>Selected Object settings</label>
+
         </div>
     </div>
     <div id="WebGLCanvas">

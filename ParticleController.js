@@ -77,7 +77,7 @@ makeParticleSystem.prototype.updateParticles = function() {
 
 };
 makeParticleSystem.prototype.displayGUI = function() {
-    this.particleGUI = new dat.GUI();
+    this.particleGUI = new dat.GUI({"width": document.getElementById('editorDiv').clientWidth});
     this.makeGUI();
     this.particleGUI.open();
     editor.append(this.particleGUI.domElement);
@@ -89,13 +89,13 @@ makeParticleSystem.prototype.makeGUI = function() {
     this.setupFolder2();
     this.setupFolder3();
     var obj = {
-        Redistribute_Particles: function () {
+        Redistribute: function () {
             var newSystem = new makeParticleSystem(particleAttributes);
             addNewSystem(newSystem);
             removeOldSystem();
         }
     };
-    this.particleGUI.add(obj, 'Redistribute_Particles');
+    this.particleGUI.add(obj, 'Redistribute');
     obj = {
         Delete_Mesh: function () {
             scene.remove(mesh);

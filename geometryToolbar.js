@@ -9,9 +9,9 @@ var gui;
 // Builds the dat.gui dom element for the selected mesh
 function displayGeometryToolbar() {
     // GUI object displaying the tracked variables
-    gui = new dat.GUI();
+    gui = new dat.GUI({"width": document.getElementById('editorDiv').clientWidth});
     // The width of the GUI
-    gui.width = container.clientWidth * .23;
+    gui.domElement.id = 'gui';
     // List of different values dat.gui will keep track of
     generateParameterList();
     // Displays the objects name at the top of the dat.gui window
@@ -128,19 +128,19 @@ function generateParameterList() {
 function setupPositionFolder() {
     var folder1 = gui.addFolder('Position');
     var meshX_Pos = folder1.add(parameters, 'X_Position')
-        .min(-200).max(200).step(1).listen();
+        .min(-1 * parseInt(sceneSize)).max(parseInt(sceneSize)).step(1).listen();
     meshX_Pos.onChange(function (value) {
         mesh.position.x = value;
         moveHighlighter();
     });
     var meshY_Pos = folder1.add(parameters, 'Y_Position')
-        .min(-200).max(200).step(1).listen();
+        .min(-1 * parseInt(sceneSize)).max(parseInt(sceneSize)).step(1).listen();
     meshY_Pos.onChange(function (value) {
         mesh.position.y = value;
         moveHighlighter();
     });
     var meshZ_Pos = folder1.add(parameters, 'Z_Position')
-        .min(-200).max(200).step(1).listen();
+        .min(-1 * parseInt(sceneSize)).max(parseInt(sceneSize)).step(1).listen();
     meshZ_Pos.onChange(function (value) {
         mesh.position.z = value;
         moveHighlighter();
@@ -177,22 +177,22 @@ function setupRotationFolder() {
 // events of those tracked variables
 function setupScalingFolder() {
     var folder3 = gui.addFolder('Scaling');
-    var meshX_Sca = folder3.add(parameters, 'X_Scale').min(1).max(100).step(1).listen();
+    var meshX_Sca = folder3.add(parameters, 'X_Scale').min(1).max(parseInt(sceneSize)).step(1).listen();
     meshX_Sca.onChange(function (value) {
         mesh.scale.x = value;
         rescaleHighlighter();
     });
-    var meshY_Sca = folder3.add(parameters, 'Y_Scale').min(1).max(100).step(1).listen();
+    var meshY_Sca = folder3.add(parameters, 'Y_Scale').min(1).max(parseInt(sceneSize)).step(1).listen();
     meshY_Sca.onChange(function (value) {
         mesh.scale.y = value;
         rescaleHighlighter();
     });
-    var meshZ_Sca = folder3.add(parameters, 'Z_Scale').min(1).max(100).step(1).listen();
+    var meshZ_Sca = folder3.add(parameters, 'Z_Scale').min(1).max(parseInt(sceneSize)).step(1).listen();
     meshZ_Sca.onChange(function (value) {
         mesh.scale.z = value;
         rescaleHighlighter();
     });
-    var mesh_Sca = folder3.add(parameters, 'Full_Scale').min(1).max(100).step(1).listen();
+    var mesh_Sca = folder3.add(parameters, 'Full_Scale').min(1).max(parseInt(sceneSize)).step(1).listen();
     mesh_Sca.onChange(function (value) {
         mesh.scale.set(value, value, value);
         rescaleHighlighter();
@@ -204,14 +204,14 @@ function setupScalingFolder() {
 function setupGeometryFolder() {
     var folder4 = gui.addFolder('Geometry');
     if (mesh.geometry instanceof THREE.BoxGeometry) {
-        var meshWidth = folder4.add(parameters, 'Width').min(1).max(100).step(1).listen();
-        var meshHeight = folder4.add(parameters, 'Height').min(1).max(100).step(1).listen();
-        var meshDepth = folder4.add(parameters, 'Depth').min(1).max(100).step(1).listen();
+        var meshWidth = folder4.add(parameters, 'Width').min(1).max(parseInt(sceneSize)).step(1).listen();
+        var meshHeight = folder4.add(parameters, 'Height').min(1).max(parseInt(sceneSize)).step(1).listen();
+        var meshDepth = folder4.add(parameters, 'Depth').min(1).max(parseInt(sceneSize)).step(1).listen();
         var meshWid_Seg = folder4.add(parameters, 'Width_Segments').min(1).max(32).step(1).listen();
         var meshHei_Seg = folder4.add(parameters, 'Height_Segments').min(1).max(32).step(1).listen();
         var meshDep_Seg = folder4.add(parameters, 'Depth_Segments').min(1).max(32).step(1).listen();
     } else if (mesh.geometry instanceof THREE.SphereGeometry) {
-        var meshRadius = folder4.add(parameters, 'Radius').min(1).max(100).step(1).listen();
+        var meshRadius = folder4.add(parameters, 'Radius').min(1).max(parseInt(sceneSize)).step(1).listen();
         meshHeiSeg = folder4.add(parameters, 'Height_Segments').min(1).max(100).step(1).listen();
         var meshWidSeg = folder4.add(parameters, 'Width_Segments').min(1).max(100).step(1).listen();
         var meshPhiStart = folder4.add(parameters, 'Phi_Start').min(0).max(32).step(1).listen();
@@ -219,21 +219,21 @@ function setupGeometryFolder() {
         meshThetaStart = folder4.add(parameters, 'Theta_Start').min(0).max(32).step(1).listen();
         meshThetaLength = folder4.add(parameters, 'Theta_Length').min(1).max(32).step(1).listen();
     } else if (mesh.geometry instanceof THREE.CylinderGeometry) {
-        var meshRadiusT = folder4.add(parameters, 'Radius_Top').min(1).max(100).step(1).listen();
-        var meshRadiusB = folder4.add(parameters, 'Radius_Bot').min(1).max(100).step(1).listen();
-        meshHeight = folder4.add(parameters, 'Height').min(1).max(100).step(1).listen();
+        var meshRadiusT = folder4.add(parameters, 'Radius_Top').min(1).max(parseInt(sceneSize)).step(1).listen();
+        var meshRadiusB = folder4.add(parameters, 'Radius_Bot').min(1).max(parseInt(sceneSize)).step(1).listen();
+        meshHeight = folder4.add(parameters, 'Height').min(1).max(parseInt(sceneSize)).step(1).listen();
         var meshRadSeg = folder4.add(parameters, 'Radial_Segments').min(1).max(100).step(1).listen();
         var meshHeiSeg = folder4.add(parameters, 'Height_Segments').min(1).max(100).step(1).listen();
         var meshOpenEnded = folder4.add(parameters, 'Open_Ended').listen();
         var meshThetaStart = folder4.add(parameters, 'Theta_Start').min(1).max(100).step(1).listen();
         var meshThetaLength = folder4.add(parameters, 'Theta_Length').min(1).max(100).step(1).listen();
     } else if (mesh.geometry instanceof THREE.PlaneGeometry) {
-        meshWidth = folder4.add(parameters, 'Width').min(1).max(100).step(1).listen();
-        meshHeight = folder4.add(parameters, 'Height').min(1).max(100).step(1).listen();
+        meshWidth = folder4.add(parameters, 'Width').min(1).max(parseInt(sceneSize)).step(1).listen();
+        meshHeight = folder4.add(parameters, 'Height').min(1).max(parseInt(sceneSize)).step(1).listen();
         meshWid_Seg = folder4.add(parameters, 'Width_Segments').min(1).max(32).step(1).listen();
         meshHei_Seg = folder4.add(parameters, 'Height_Segments').min(1).max(32).step(1).listen();
     } else {
-        alert("Some weird geometry is being checked. DANGER");
+        alert("Some weird geometry is being checked. DANGER WILL ROBINSON");
     }
 
     var obj = {

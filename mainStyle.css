@@ -13,8 +13,8 @@ body {
     /*position: absolute;*/
     position: absolute;
     top: 10vh;
-    left: 15vw;
-    width: 70vw;
+    left: 20vw;
+    width: 60vw;
     height: 90vh;
     background-color: #555555;
 }
@@ -25,21 +25,21 @@ body {
     color: #FFFFFF;
     top: 10vh;
     height: 90vh;
-    width: 15vw;
+    width: 20vw;
     overflow-x: hidden;
-    overflow-y: auto;
+    overflow-y: hidden;
     background-color: #000000;
-    font-size: 1vw;
+    font-size: 1.5vw;
     text-align: center;
 }
 
 #rightSideBarDiv {
     /*position: absolute;*/
-    margin-left: -30px;
     position: absolute;
+    padding-left:35px;
     color: #FFFFFF;
     top: 10vh;
-    left: 85%;
+    left: 80vw;
     height: 90vh;
     width: 20vw;
     background: linear-gradient(#125252, #000000);
@@ -69,18 +69,20 @@ body {
 }
 
 #editor2Div {
-    margin-left: -30px;
+
 }
 
 #editorDiv {
-    margin-right: -30px;
+    padding-left:25px;
+    width:100%;
     height: 77%;
     background: linear-gradient(#125252, #000000);
 }
 
 #meshSelector {
-    width: 90%;
+    width: 100%;
     height: 15%;
+    margin-bottom: 10px;
 }
 
 #save_butt {
@@ -91,13 +93,16 @@ body {
     font-size: 01vw;
 
 }
-
+#place_butt {
+    margin-top: 5px;
+    width: 100%;
+}
 #load_butt {
     position: static;
     left: 105px;
     top: 10px;
     width: 75px;
-    font-size: .9vw;
+    font-size: 01vw;
 }
 
 #show_grid {

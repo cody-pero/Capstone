@@ -15,9 +15,8 @@ function displayLightToolbar() {
     var sphereSize = 1;
 
     // GUI object displaying the tracked variables
-    lightGui = new dat.GUI();
+    lightGui = new dat.GUI({"width": document.getElementById('editorDiv').clientWidth});
     // The width of the GUI
-    lightGui.width = container.clientWidth * .23;
     // List of different values dat.gui will keep track of
     // Displays the objects name at the top of the dat.gui window
     var obj = {Name: mesh.name};
@@ -38,7 +37,7 @@ function displayLightToolbar() {
 }
 function generateLightParamList() {
     lightParam = {
-        light_color : mesh.color,
+        light_color : mesh.color.getHex()
     };
 
     if(mesh instanceof THREE.AmbientLight) {
@@ -71,7 +70,7 @@ function generateLightParamList() {
         lightParam.intensityValue = mesh.intensity;
         lightParam.distanceValue = mesh.distance;
         lightParam.decayValue = mesh.decay;
-        lightHelper = new THREE.PointLightHelper(mesh, 10);
+        lightHelper = new THREE.PointLightHelper(mesh, 1);
         lightHelper.name = "default";
         scene.add(lightHelper);
         buildBaseToolbar();
@@ -83,7 +82,7 @@ function buildBaseToolbar() {
     var meshColor = lightGui.addColor(lightParam, 'light_color')
         .name('Light color').listen();
     meshColor.onChange(function (value) {
-        mesh.color.setRGB(value.r, value.g, value.b);
+        mesh.color.setHex( value );
         updateMaterials();
     });
 }
@@ -134,17 +133,17 @@ function folderLightAttributes() {
 function folderPos() {
     var folder1 = lightGui.addFolder('Position');
     var meshX_Pos = folder1.add(lightParam, 'X_Position')
-        .min(-200).max(200).step(1).listen();
+        .min(-1 * parseInt(sceneSize)).max(parseInt(sceneSize)).step(1).listen();
     meshX_Pos.onChange(function (value) {
         mesh.position.x = value;
     });
     var meshY_Pos = folder1.add(lightParam, 'Y_Position')
-        .min(-200).max(200).step(1).listen();
+        .min(-1 * parseInt(sceneSize)).max(parseInt(sceneSize)).step(1).listen();
     meshY_Pos.onChange(function (value) {
         mesh.position.y = value;
     });
     var meshZ_Pos = folder1.add(lightParam, 'Z_Position')
-        .min(-200).max(200).step(1).listen();
+        .min(-1 * parseInt(sceneSize)).max(parseInt(sceneSize)).step(1).listen();
     meshZ_Pos.onChange(function (value) {
         mesh.position.z = value;
     });
