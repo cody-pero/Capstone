@@ -25,6 +25,8 @@ var keyboard = new KeyboardState();
 // duplicates when saving/loading
 var id = 0;
 
+var sceneSize = 10;
+
 var listOfSystems = [];
 
 var clock = new THREE.Clock();
@@ -44,6 +46,7 @@ function init() {
     container = document.getElementById("WebGLCanvas");
     var SCREEN_WIDTH = container.clientWidth, SCREEN_HEIGHT = container.clientHeight;
     var VIEW_ANGLE = 2, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 1, FAR = 20000;
+
     if (Detector.webgl) {
         renderer = new THREE.WebGLRenderer({antialias: true});
     }
@@ -116,6 +119,7 @@ function createFloor() {
 
 // Renderer function
 function render() {
+    sceneSize = document.getElementById('sizeSlide').value;
     requestAnimationFrame(render);
     renderer.render(scene, camera);
     update();
