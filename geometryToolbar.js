@@ -55,6 +55,8 @@ function generateParameterList() {
         X_Scale: mesh.scale.x,
         Y_Scale: mesh.scale.y,
         Z_Scale: mesh.scale.z,
+        cast_Shad: mesh.castShadow,
+        rec_Shad: mesh.receiveShadow,
         Full_Scale: 1,
         Color_Diffuse: mesh.material.color.getHex(),
         Color_Emissive: '#000000',
@@ -247,6 +249,17 @@ function setupGeometryFolder() {
 // events of those tracked variables
 function setupMaterialsFolder() {
     var folder5 = gui.addFolder('Materials');
+
+    var meshRecvShad = folder5.add(parameters, 'rec_Shad').name('Recieve Shadow').listen();
+    meshRecvShad.onChange(function (value) {
+        mesh.receiveShadow = value;
+    });
+
+    var meshCastShad = folder5.add(parameters, 'cast_Shad').name('Cast Shadow').listen();
+    meshCastShad.onChange(function (value) {
+        mesh.castShadow = value;
+    });
+
     var meshColor = folder5.addColor(parameters, 'Color_Diffuse').name('Color (Diffuse)').listen();
     meshColor.onChange(function (value) {
         mesh.material.color.setHex(value);
@@ -335,7 +348,8 @@ function updateMesh() {
     newMesh.rotation.y = mesh.rotation.y;
     newMesh.rotation.z = mesh.rotation.z;
     newMesh.name = mesh.name;
-
+    newMesh.castShadow = mesh.castShadow;
+    newMesh.recieveShadow = mesh.recieveShadow;
     //removes old mesh
     scene.remove(mesh);
     // adds new mesh

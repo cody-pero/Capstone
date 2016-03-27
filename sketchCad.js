@@ -17,7 +17,7 @@ var container, scene, camera, renderer, controls, mesh;
 // editor - div element containing the mesh editor functionality
 // faceEditor - div element containing the face editor functionality
 // selectedFace - currently selected face
-var editor, faceEditor, mode, selectedFace, partParameters;
+var editor, faceEditor, mode, selectedFace;
 
 // used for getting keyboard commands
 var keyboard = new KeyboardState();
@@ -46,7 +46,8 @@ function init() {
     container = document.getElementById("WebGLCanvas");
     var SCREEN_WIDTH = container.clientWidth, SCREEN_HEIGHT = container.clientHeight;
     var VIEW_ANGLE = 2, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 1, FAR = 20000;
-
+    camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
+    camera.name = "Camera";
     if (Detector.webgl) {
         renderer = new THREE.WebGLRenderer({antialias: true});
     }
@@ -54,9 +55,12 @@ function init() {
         renderer = new THREE.CanvasRenderer();
     }
     renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+    renderer.shadowMapEnabled = true;
+   // renderer.shadowMapSoft = true;
+    renderer.shadowMapType = THREE.PCFSoftShadowMap;
+
     container.appendChild(renderer.domElement);
-    camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
-    camera.name = "Camera";
+
     scene.add(camera);
     camera.position.set(400, 400, 400);
 
@@ -65,7 +69,7 @@ function init() {
 
     // Add Default Lights
     var light = new THREE.PointLight(0xffffff);
-    light.position.set(-20, 20, 20);
+    light.position.set(-10, 10, 10);
     light.name = "Default Point Light";
     light.userData = {TYPE: "light"};
     var light2 = new THREE.AmbientLight(0x333333);
@@ -231,6 +235,43 @@ function changeEditorDiv() {
         for (var index = 0; index < listOfSystems.length; index++) {
             if (listOfSystems[index].particleGroup == mesh) {
                 editor.empty();
+                if(listOfSystems[index].savedParameters != undefined)
+                {
+                    particleAttributes = listOfSystems[index].savedParameters;
+                    particleAttributes.currSystem = listOfSystems[index];
+                }
+                else {
+                    particleAttributes = {
+                        pVelX: 0.0,
+                        pPosXLower: -5.0,
+                        pPosXUpper: 5.0,
+                        pPosYLower: -5.0,
+                        pPosYUpper: 5.0,
+                        pPosZLower: -5.0,
+                        pPosZUpper: 5.0,
+                        pVelY: 0.0,
+                        pVelZ: 0.0,
+                        numParticles: 100,
+                        opacity: .9,
+                        size: 15,
+                        transparent: true,
+                        map: "snowflake",
+                        blending: "Additive",
+                        depthWrite: false,
+                        sizeAttenuation: true,
+                        rValueMin: 0,
+                        gValueMin: 0,
+                        bValueMin: 0,
+                        rValueMax: 1,
+                        gValueMax: 1,
+                        bValueMax: 1,
+                        groupXrot: 0,
+                        groupYrot: 0,
+                        groupZrot: 0,
+                        flip: 1
+                    };
+                    particleAttributes.currSystem = listOfSystems[index];
+                }
                 listOfSystems[index].displayGUI();
             }
         }
@@ -296,34 +337,67 @@ function onMouseClick(event) {
 //******************************Stuff that makes the buttons work***********************************
 
 function generateMesh() {
-    var geometry, localMesh, material;
+    var geometry, localMesh, material, newLight;
     if (document.getElementById('shapeSelector').value == 'Point Light') {
-        var light = new THREE.PointLight(0xffffff);
-        light.userData = {TYPE: "light"};
-        light.position.set(-200, 200, 200);
-        light.name = "Point Light" + id;
-        scene.add(light);
-        mesh = light;
+        newLight = new THREE.PointLight(0xffffff);
+        newLight.userData = {TYPE: "light"};
+        newLight.position.set(-200, 200, 200);
+        newLight.name = "Point Light" + id;
+        scene.add(newLight);
+        mesh = newLight;
+        updateMaterials();
         rebuildDropDown();
         changeEditorDiv();
     } else if (document.getElementById('shapeSelector').value == 'Ambient Light') {
-        var light = new THREE.AmbientLight(0x666666);
-        light.name = "Ambient Light" + id;
-        light.userData = {TYPE: "light"};
-        scene.add(light);
-        mesh = light;
+        newLight = new THREE.AmbientLight(0x666666);
+        newLight.name = "Ambient Light" + id;
+        newLight.userData = {TYPE: "light"};
+        scene.add(newLight);
+        mesh = newLight;
+        updateMaterials();
         rebuildDropDown();
         changeEditorDiv();
-    } else if (document.getElementById('shapeSelector').value == 'Spot Light') {
-        var light = new THREE.SpotLight(0xffffff, 1.0, 0.0, Math.PI / 3, 10.0, 1);
-        light.name = "Spot Light" + id;
-        light.userData = {TYPE: "light"};
-        scene.add(light);
-        mesh = light;
+    } else if (document.getElementById('shapeSelector').value == 'Directional Light') {
+        newLight = new THREE.DirectionalLight(0xffffff, 1.0);
+        newLight.name = "Directional Light" + id;
+        id++;
+        newLight.userData = {TYPE: "light"};
+        scene.add(newLight);
+        mesh = newLight;
+        updateMaterials();
         rebuildDropDown();
         changeEditorDiv();
     } else if (document.getElementById('shapeSelector').value == 'Particle System') {
-        var particleGroup = new makeParticleSystem();
+         particleAttributes = {
+            pVelX: 0.0,
+            pPosXLower: -5.0,
+            pPosXUpper: 5.0,
+            pPosYLower: -5.0,
+            pPosYUpper: 5.0,
+            pPosZLower: -5.0,
+            pPosZUpper: 5.0,
+            pVelY: 0.0,
+            pVelZ: 0.0,
+            numParticles: 100,
+            opacity: .9,
+            size: 15,
+            transparent: true,
+            map: "snowflake",
+            blending: "Additive",
+            depthWrite: false,
+            sizeAttenuation: true,
+            rValueMin: 0,
+            gValueMin: 0,
+            bValueMin: 0,
+            rValueMax: 1,
+            gValueMax: 1,
+            bValueMax: 1,
+            groupXrot: 0,
+            groupYrot: 0,
+            groupZrot: 0,
+            flip: 1
+        };
+        var particleGroup = new MakeParticleSystem();
         particleGroup.particleGroup.name = "Particle System " + id;
         particleGroup.userData = {TYPE: "particle"};
         id++;
@@ -349,6 +423,7 @@ function generateMesh() {
             vertexColors: THREE.FaceColors
         });
         material.vertexColors = THREE.FaceColors;
+        material.needsUpdate = true;
         material.transparent = true;
         localMesh = new THREE.Mesh(geometry, material);
         localMesh.geometry.dynamic = true;
@@ -359,6 +434,7 @@ function generateMesh() {
         mesh = localMesh;
         // Repopulates the selectMesh dropdown list with the new mesh name
         rebuildDropDown();
+        changeEditorDiv();
         editor.empty();
         displayGeometryToolbar();
     }
@@ -383,7 +459,7 @@ function addEventListeners() {
 // Save scene
     document.getElementById('save_butt').onclick = function () {
         var r = window.confirm("SketchCad currently does not support saving of particle systems. These " +
-            "items will cause issues when saving. Continue?")
+            "items will cause issues when saving. Continue?");
         if(r){
             var retval = prompt("Please enter a filename: ");
             var filename = retval;
@@ -431,7 +507,7 @@ function addEventListeners() {
                 addEventListeners();
                 THREEx.WindowResize(renderer, camera);
 
-            }
+            };
             r.readAsText(f);
         } else {
             alert("Failed to load file");

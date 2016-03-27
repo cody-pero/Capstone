@@ -43,19 +43,24 @@ function generateLightParamList() {
     if(mesh instanceof THREE.AmbientLight) {
         buildBaseToolbar();
     }
-    else if(mesh instanceof THREE.SpotLight) {
+    else if(mesh instanceof THREE.DirectionalLight) {
         lightParam.X_Position = mesh.position.x;
         lightParam.Y_Position = mesh.position.y;
         lightParam.Z_Position = mesh.position.z;
         lightParam.intensityValue = mesh.intensity;
-        lightParam.distanceValue = mesh.distance;
         lightParam.angleValue = mesh.angle;
         lightParam.exponentValue = mesh.exponent;
-        lightParam.decayValue = mesh.decay;
+     //   lightParam.decayValue = mesh.decay;
         lightParam.shadowEnabled = mesh.castShadow;
+        lightParam.shadowBiasValue = mesh.shadowBias;
         lightParam.shadowMapWidth = mesh.shadowMapWidth;
         lightParam.shadowMapHeight = mesh.shadowMapHeight;
-        lightHelper = new THREE.SpotLightHelper( mesh );
+        lightParam.shadowCameraFar = mesh.shadowCameraFar;
+        lightParam.shadowCameraNear = mesh.shadowCameraNear;
+       // lightParam.shadowCameraFov = mesh.shadowCameraFov;
+        lightParam.shadowDarkness = mesh.shadowDarkness;
+        lightParam.shadowCameraVisible = mesh.shadowCameraVisible;
+        lightHelper = new THREE.DirectionalLightHelper( mesh );
         lightHelper.name = "default";
         scene.add( lightHelper );
         buildBaseToolbar();
@@ -78,6 +83,11 @@ function generateLightParamList() {
         folderLightAttributes();
      }
 }
+function updateShadows() {
+    mesh.shadowCamera.updateProjectionMatrix();
+    console.log(mesh);
+    console.log(mesh.shadowCamera);
+}
 function buildBaseToolbar() {
     var meshColor = lightGui.addColor(lightParam, 'light_color')
         .name('Light color').listen();
@@ -92,19 +102,62 @@ function folderShadowAttributes() {
     var shadowEnabled = folder1.add(lightParam, 'shadowEnabled').name('Enable Shadows').listen();
     shadowEnabled.onChange(function(value) {
         mesh.castShadow = value;
-        updateMaterials
+        mesh.shadowCamera.castShadow = value;
+        updateShadows();
+        updateMaterials();
     });
+    var shadowBias = folder1.add(lightParam, 'shadowBiasValue').name('Shadow Bias ')
+        .min(-1.0).max(1.0).step(.01);
+    shadowBias.onChange(function(value) {
+        mesh.shadowBias = value;
+        updateShadows();
+        updateMaterials();
+    });
+    var shadowCamNear = folder1.add(lightParam, 'shadowCameraNear').name('Shadow Camera Near')
+        .min(1).max(1000).step(50);
+    shadowCamNear.onChange(function(value) {
+        mesh.shadowCameraNear = value;
+        updateShadows();
+        updateMaterials();
+    });
+    var shadowCamFar = folder1.add(lightParam, 'shadowCameraFar').name('Shadow Camera Far')
+        .min(1).max(5000).step(100);
+    shadowCamFar.onChange(function(value) {
+        mesh.shadowCameraFar = value;
+        updateShadows();
+        updateMaterials();
+    });
+    /*
+    var shadowCamFov = folder1.add(lightParam, 'shadowCameraFov')
+        .min(0).max(90).step(15);
+    shadowCamFov.onChange(function(value) {
+        mesh.shadowCameraFov = value;
+        updateMaterials();
+    });
+    */
+    var shadowCamVis = folder1.add(lightParam, 'shadowCameraVisible').name('Shadow Camera');
+    shadowCamVis.onChange(function(value) {
+        mesh.shadowCameraVisible = value;
+        mesh.shadowCamera.name="default";
+    });
+    var shadowDarkness = folder1.add(lightParam, 'shadowDarkness').name('Shadow darkness')
+        .min(0).max(1.0).step(.1);
+    shadowDarkness.onChange(function(value) {
+        mesh.shadowDarkness = value;
+        updateMaterials();
+    });
+
     var shadowWidth = folder1.add(lightParam, 'shadowMapWidth').name('Shadow Map Width')
         .min(0.0).max(1024).listen();
     shadowWidth.onChange(function(value) {
         mesh.shadowMapWidth = value;
-        updateMaterials
+        updateMaterials();
     });
     var shadowHeight = folder1.add(lightParam, 'shadowMapHeight').name('Shadow Map Height')
         .min(0.0).max(1024).listen();
     shadowHeight.onChange(function(value) {
         mesh.shadowMapHeight = value;
-        updateMaterials
+        updateMaterials();
     });
 
 }
@@ -114,20 +167,23 @@ function folderLightAttributes() {
         .min(0.0).max(1.0).step(.1).listen();
     lightIntensity.onChange(function(value) {
         mesh.intensity = value;
-        updateMaterials
+        updateMaterials();
     });
+    /*
     var lightDistance = folder1.add(lightParam, 'distanceValue')
         .min(0.0).max(1000).step(1).listen();
     lightDistance.onChange(function(value) {
         mesh.distance = value;
-        updateMaterials
+        updateMaterials();
     });
+
     var lightDecay = folder1.add(lightParam, 'decayValue')
         .min(0.0).max(1.0).step(.1).listen();
     lightDecay.onChange(function(value) {
         mesh.decay = value;
-        updateMaterials
+        updateMaterials();
     });
+     */
 }
 
 function folderPos() {
@@ -151,6 +207,7 @@ function folderPos() {
 }
 function updateMaterials() {
     var count = 0;
+
     for (var i = 0; i < scene.children.length; i++) {
         var node = scene.children[i];
 

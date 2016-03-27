@@ -32,16 +32,62 @@ var particleAttributes = {
     groupZrot: 0,
     flip: 1
 };
-function makeParticleSystem( attributes ) {
+
+function MakeParticleSystem( attributes ) {
     this.particleGroup = initializeSystem();
+    particleAttributes.currSystem = this;
     this.particleMaterial = new THREE.ParticleBasicMaterial();
+    this.savedParameters = undefined;
     this.particleGUI = undefined;
     if(attributes != undefined) {
         particleAttributes = attributes;
+        this.savedParameters = $.extend(true, {}, attributes);
     }
 }
+MakeParticleSystem.prototype.saveParameters = function( otherSavedParams ) {
+    this.savedParameters = otherSavedParams;
 
-makeParticleSystem.prototype.updateParticles = function() {
+}
+/* Further Testing required but works with multiple systems */
+MakeParticleSystem.prototype.updateParticles = function() {
+    if(this.savedParameters != undefined) {
+        var time = 4 * clock.getElapsedTime();
+        var vertices = this.particleGroup.geometry.vertices;
+        this.particleGroup.geometry.verticesNeedUpdate = true;
+        this.particleGroup.material.colorsNeedUpdate = true;
+        for (var i = 0; i < vertices.length; i++) {
+            // Moves the vertices by there velocity
+            var v = vertices[i];
+            v.y = v.y - (this.savedParameters.pVelY);
+            v.x = v.x - (this.savedParameters.pVelX);
+            v.z = v.z - (this.savedParameters.pVelZ);
+
+            // Keeps the vertices contained in user specified region
+            if (v.y <= this.savedParameters.pPosYLower) {
+                v.y = this.savedParameters.pPosYUpper;
+            } else if (v.y >= this.savedParameters.pPosYUpper) {
+                v.y = this.savedParameters.pPosYLower;
+            }
+            if (v.x <= this.savedParameters.pPosXLower) {
+                v.x = this.savedParameters.pPosXUpper;
+            } else if (v.x >= this.savedParameters.pPosXUpper) {
+                v.x = this.savedParameters.pPosXLower;
+            }
+            if (v.z <= this.savedParameters.pPosZLower) {
+                v.z = this.savedParameters.pPosZUpper;
+            } else if (v.z >= this.savedParameters.pPosZUpper) {
+                v.z = this.savedParameters.pPosZLower;
+            }
+        }
+        this.particleGroup.rotation.x = time * this.savedParameters.groupXrot;
+        this.particleGroup.rotation.y = time * this.savedParameters.groupYrot;
+        this.particleGroup.rotation.z = time * this.savedParameters.groupZrot;
+
+    }
+};
+/*
+This one is the original that only worked with one system but it worked well
+MakeParticleSystem.prototype.updateParticles = function() {
     var time = 4*clock.getElapsedTime();
     var vertices = this.particleGroup.geometry.vertices;
     this.particleGroup.geometry.verticesNeedUpdate = true;
@@ -76,13 +122,14 @@ makeParticleSystem.prototype.updateParticles = function() {
 
 
 };
-makeParticleSystem.prototype.displayGUI = function() {
+*/
+MakeParticleSystem.prototype.displayGUI = function() {
     this.particleGUI = new dat.GUI({"width": document.getElementById('editorDiv').clientWidth});
     this.makeGUI();
     this.particleGUI.open();
     editor.append(this.particleGUI.domElement);
 };
-makeParticleSystem.prototype.makeGUI = function() {
+MakeParticleSystem.prototype.makeGUI = function() {
     var obj = {Name: mesh.name};
     this.particleGUI.add(obj, 'Name');
     this.setupFolder1();
@@ -90,14 +137,18 @@ makeParticleSystem.prototype.makeGUI = function() {
     this.setupFolder3();
     var obj = {
         Redistribute: function () {
-            var newSystem = new makeParticleSystem(particleAttributes);
+            var copyOfParams  = $.extend(true, {}, particleAttributes);
+            var oldSystem = particleAttributes.currSystem;
+            oldSystem.saveParameters(copyOfParams);
+
+            var newSystem = new MakeParticleSystem(oldSystem.savedParameters);
             addNewSystem(newSystem);
             removeOldSystem();
         }
     };
     this.particleGUI.add(obj, 'Redistribute');
     obj = {
-        Delete_Mesh: function () {
+        Delete_System: function () {
             scene.remove(mesh);
             cleanupHighlighter();
             editor.empty();
@@ -105,76 +156,82 @@ makeParticleSystem.prototype.makeGUI = function() {
             rebuildDropDown();
         }
     };
-    this.particleGUI.add(obj, 'Delete_Mesh');
+    this.particleGUI.add(obj, 'Delete_System');
+    obj = {
+        Save_Parameters: function () {
+
+        }
+    };
+    this.particleGUI.add(obj, 'Save_Parameters');
     // Opens the gui clears the editor div and appends the gui to the div
     this.particleGUI.open();
     editor.append(this.particleGUI.domElement);
 };
 
-makeParticleSystem.prototype.setupFolder1 = function() {
+MakeParticleSystem.prototype.setupFolder1 = function() {
     var folder1 = this.particleGUI.addFolder('Particle Settings');
 //________________________________________Velocity
     // The speed in which the particle travels the X plane
     var pVelocityX = folder1.add(particleAttributes, "pVelX")
-        .min(-1.0).max(1.0).step(.05).listen();
+        .min(-1.0).max(1.0).step(.1).listen();
     pVelocityX.onChange(function(value) {
         particleAttributes.pVelX = value;
     });
     // The speed in which the particle travels the Y plane
     var pVelocityY = folder1.add(particleAttributes, "pVelY")
-        .min(-1.0).max(1.0).step(.05).listen();
+        .min(-1.0).max(1.0).step(.1).listen();
     pVelocityY.onChange(function(value) {
         particleAttributes.pVelY = value;
     });
     // The speed in which the particle travels the Z plane
     var pVelocityZ = folder1.add(particleAttributes, "pVelZ")
-        .min(-1.0).max(1.0).step(.05).listen();
+        .min(-1.0).max(1.0).step(.1).listen();
     pVelocityZ.onChange(function(value) {
         particleAttributes.pVelZ = value;
     });
 //________________________________________Position
     // The minimum starting x positon on the plane
     var pPosXLowerBound = folder1.add(particleAttributes, "pPosXLower")
-        .min(-100).max(100).step(1).listen();
+        .min(-1 * parseInt(sceneSize)).max(parseInt(sceneSize)).step(1).listen();
     pPosXLowerBound.onChange(function(value) {
         particleAttributes.pPosXLower = value;
     });
 
     // The maximum starting x positon on the plane
     var pPosXUpperBound = folder1.add(particleAttributes, "pPosXUpper")
-        .min(-100).max(100).step(1).listen();
+        .min(-1 * parseInt(sceneSize)).max(parseInt(sceneSize)).step(1).listen();
     pPosXUpperBound.onChange(function(value) {
         particleAttributes.pPosXUpper = value;
     });
 
     // The minimum starting y positon on the plane
     var pPosYLowerBound = folder1.add(particleAttributes, "pPosYLower")
-        .min(-100).max(100).step(1).listen();
+        .min(-1 * parseInt(sceneSize)).max(parseInt(sceneSize)).step(1).listen();
     pPosYLowerBound.onChange(function(value) {
         particleAttributes.pPosYLower = value;
     });
 
     var pPosYUpperBound = folder1.add(particleAttributes, "pPosYUpper")
-        .min(-100).max(100).step(1).listen();
+        .min(-1 * parseInt(sceneSize)).max(parseInt(sceneSize)).step(1).listen();
     pPosYUpperBound.onChange(function(value) {
         particleAttributes.pPosYUpper = value;
     });
 
     // The minimum starting z positon on the plane
     var pPosZLowerBound = folder1.add(particleAttributes, "pPosZLower")
-        .min(-100).max(100).step(1).listen();
+        .min(-1 * parseInt(sceneSize)).max(parseInt(sceneSize)).step(1).listen();
     pPosZLowerBound.onChange(function(value) {
         particleAttributes.pPosZLower = value;
     });
 
     // The maximum starting z positon on the plane
     var pPosZUpperBound = folder1.add(particleAttributes, "pPosZUpper")
-        .min(-100).max(100).step(1).listen();
+        .min(-1 * parseInt(sceneSize)).max(parseInt(sceneSize)).step(1).listen();
     pPosZUpperBound.onChange(function(value) {
         particleAttributes.pPosZUpper = value;
     });
 };
-makeParticleSystem.prototype.setupFolder2 = function() {
+MakeParticleSystem.prototype.setupFolder2 = function() {
     var folder2 = this.particleGUI.addFolder('Emitter Settings');
     // Controls the number of particles in the system
     var eNumParticles = folder2.add(particleAttributes, "numParticles")
@@ -207,7 +264,7 @@ makeParticleSystem.prototype.setupFolder2 = function() {
 
 
 };
-makeParticleSystem.prototype.setupFolder3 = function() {
+MakeParticleSystem.prototype.setupFolder3 = function() {
     var folder3 = this.particleGUI.addFolder('Material Settings');
 
     var mOpacity = folder3.add(particleAttributes, "opacity")
