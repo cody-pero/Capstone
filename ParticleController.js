@@ -39,10 +39,12 @@ function MakeParticleSystem( attributes ) {
     this.particleMaterial = new THREE.ParticleBasicMaterial();
     this.savedParameters = undefined;
     this.particleGUI = undefined;
+
     if(attributes != undefined) {
-        particleAttributes = attributes;
-        this.savedParameters = $.extend(true, {}, attributes);
+    //    particleAttributes = attributes;
+        this.savedParameters = attributes;//$.extend(true, {}, attributes);
     }
+
 }
 MakeParticleSystem.prototype.saveParameters = function( otherSavedParams ) {
     this.savedParameters = otherSavedParams;
@@ -157,12 +159,7 @@ MakeParticleSystem.prototype.makeGUI = function() {
         }
     };
     this.particleGUI.add(obj, 'Delete_System');
-    obj = {
-        Save_Parameters: function () {
 
-        }
-    };
-    this.particleGUI.add(obj, 'Save_Parameters');
     // Opens the gui clears the editor div and appends the gui to the div
     this.particleGUI.open();
     editor.append(this.particleGUI.domElement);
