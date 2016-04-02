@@ -4,50 +4,19 @@
 // default settings for the particles mostly 0 for anything that causes it to move, and a small
 // cube pattern to the randomization of vertices
 var particleAttributes = {
-    pVelX: 0.0,
-    pPosXLower: -5.0,
-    pPosXUpper: 5.0,
-    pPosYLower: -5.0,
-    pPosYUpper: 5.0,
-    pPosZLower: -5.0,
-    pPosZUpper: 5.0,
-    pVelY: 0.0,
-    pVelZ: 0.0,
-    numParticles: 100,
-    opacity: .9,
-    size: 15,
-    transparent: true,
-    map: "snowflake",
-    blending: "Additive",
-    depthWrite: false,
-    sizeAttenuation: true,
-    rValueMin: 0,
-    gValueMin: 0,
-    bValueMin: 0,
-    rValueMax: 1,
-    gValueMax: 1,
-    bValueMax: 1,
-    groupXrot: 0,
-    groupYrot: 0,
-    groupZrot: 0,
-    flip: 1
+
 };
 
-function MakeParticleSystem( attributes ) {
-    this.particleGroup = initializeSystem();
-    particleAttributes.currSystem = this;
-    this.particleMaterial = new THREE.ParticleBasicMaterial();
+function MakeParticleSystem( ) {
     this.savedParameters = undefined;
     this.particleGUI = undefined;
-
-    if(attributes != undefined) {
-    //    particleAttributes = attributes;
-        this.savedParameters = attributes;//$.extend(true, {}, attributes);
-    }
+    this.particleGroup = initializeSystem();
+    particleAttributes.currSystem = this;
 
 }
 MakeParticleSystem.prototype.saveParameters = function( otherSavedParams ) {
     this.savedParameters = otherSavedParams;
+    this.savedParameters.currSystem = this;
 
 }
 /* Further Testing required but works with multiple systems */
@@ -60,9 +29,9 @@ MakeParticleSystem.prototype.updateParticles = function() {
         for (var i = 0; i < vertices.length; i++) {
             // Moves the vertices by there velocity
             var v = vertices[i];
-            v.y = v.y - (this.savedParameters.pVelY);
-            v.x = v.x - (this.savedParameters.pVelX);
-            v.z = v.z - (this.savedParameters.pVelZ);
+            v.y = v.y - (this.savedParameters.pVelY/10);
+            v.x = v.x - (this.savedParameters.pVelX/10);
+            v.z = v.z - (this.savedParameters.pVelZ/10);
 
             // Keeps the vertices contained in user specified region
             if (v.y <= this.savedParameters.pPosYLower) {
@@ -81,50 +50,13 @@ MakeParticleSystem.prototype.updateParticles = function() {
                 v.z = this.savedParameters.pPosZLower;
             }
         }
-        this.particleGroup.rotation.x = time * this.savedParameters.groupXrot;
-        this.particleGroup.rotation.y = time * this.savedParameters.groupYrot;
-        this.particleGroup.rotation.z = time * this.savedParameters.groupZrot;
+        this.particleGroup.rotation.x = time * (this.savedParameters.groupXrot/10);
+        this.particleGroup.rotation.y = time * (this.savedParameters.groupYrot/10);
+        this.particleGroup.rotation.z = time * (this.savedParameters.groupZrot/10);
 
     }
 };
-/*
-This one is the original that only worked with one system but it worked well
-MakeParticleSystem.prototype.updateParticles = function() {
-    var time = 4*clock.getElapsedTime();
-    var vertices = this.particleGroup.geometry.vertices;
-    this.particleGroup.geometry.verticesNeedUpdate = true;
-    this.particleGroup.material.colorsNeedUpdate = true;
-    for(var i = 0; i < vertices.length; i++){
-        // Moves the vertices by there velocity
-        var v = vertices[i];
-        v.y = v.y - (particleAttributes.pVelY);
-        v.x = v.x - (particleAttributes.pVelX);
-        v.z = v.z - (particleAttributes.pVelZ);
 
-        // Keeps the vertices contained in user specified region
-        if(v.y <= particleAttributes.pPosYLower ){
-            v.y = particleAttributes.pPosYUpper;
-        } else if(v.y >= particleAttributes.pPosYUpper) {
-            v.y = particleAttributes.pPosYLower;
-        }
-        if(v.x <= particleAttributes.pPosXLower) {
-            v.x = particleAttributes.pPosXUpper;
-        } else if(v.x >= particleAttributes.pPosXUpper) {
-            v.x = particleAttributes.pPosXLower;
-        }
-        if(v.z <= particleAttributes.pPosZLower) {
-            v.z = particleAttributes.pPosZUpper;
-        } else if(v.z >= particleAttributes.pPosZUpper) {
-            v.z = particleAttributes.pPosZLower;
-        }
-    }
-    this.particleGroup.rotation.x = time * particleAttributes.groupXrot;
-    this.particleGroup.rotation.y = time * particleAttributes.groupYrot;
-    this.particleGroup.rotation.z = time * particleAttributes.groupZrot;
-
-
-};
-*/
 MakeParticleSystem.prototype.displayGUI = function() {
     this.particleGUI = new dat.GUI({"width": document.getElementById('editorDiv').clientWidth});
     this.makeGUI();
@@ -143,9 +75,11 @@ MakeParticleSystem.prototype.makeGUI = function() {
             var oldSystem = particleAttributes.currSystem;
             oldSystem.saveParameters(copyOfParams);
 
-            var newSystem = new MakeParticleSystem(oldSystem.savedParameters);
+            var newSystem = new MakeParticleSystem();
+            newSystem.saveParameters(oldSystem.savedParameters);
             addNewSystem(newSystem);
-            removeOldSystem();
+            removeOldSystem(oldSystem);
+            changeEditorDiv();
         }
     };
     this.particleGUI.add(obj, 'Redistribute');
@@ -170,19 +104,19 @@ MakeParticleSystem.prototype.setupFolder1 = function() {
 //________________________________________Velocity
     // The speed in which the particle travels the X plane
     var pVelocityX = folder1.add(particleAttributes, "pVelX")
-        .min(-1.0).max(1.0).step(.1).listen();
+        .min(-10).max(10).step(1).listen();
     pVelocityX.onChange(function(value) {
         particleAttributes.pVelX = value;
     });
     // The speed in which the particle travels the Y plane
     var pVelocityY = folder1.add(particleAttributes, "pVelY")
-        .min(-1.0).max(1.0).step(.1).listen();
+        .min(-10).max(10).step(1).listen();
     pVelocityY.onChange(function(value) {
         particleAttributes.pVelY = value;
     });
     // The speed in which the particle travels the Z plane
     var pVelocityZ = folder1.add(particleAttributes, "pVelZ")
-        .min(-1.0).max(1.0).step(.1).listen();
+        .min(-10).max(10).step(1).listen();
     pVelocityZ.onChange(function(value) {
         particleAttributes.pVelZ = value;
     });
@@ -237,17 +171,17 @@ MakeParticleSystem.prototype.setupFolder2 = function() {
         particleAttributes.numParticles = value;
     });
     var eXrot = folder2.add(particleAttributes, "groupXrot")
-        .min(0).max(3).step(.1).listen();
+        .min(-10).max(10).step(1).listen();
     eXrot.onChange(function(value) {
         particleAttributes.groupXrot = value;
     });
     var eYrot = folder2.add(particleAttributes, "groupYrot")
-        .min(0).max(3).step(.1).listen();
+        .min(-10).max(10).step(1).listen();
     eYrot.onChange(function(value) {
         particleAttributes.groupYrot = value;
     });
     var eZrot = folder2.add(particleAttributes, "groupZrot")
-        .min(0).max(3).step(.1).listen();
+        .min(-10).max(10).step(1).listen();
     eZrot.onChange(function(value) {
         particleAttributes.groupZrot = value;
     });
@@ -285,8 +219,7 @@ MakeParticleSystem.prototype.setupFolder3 = function() {
     mTexture.onChange(function(value) {
        particleAttributes.map =  value;
     });
-    var mBlending = folder3.add(particleAttributes, 'blending', ["None", "Normal", "Additive",
-        "Subtractive","Multiplicative"]).listen();
+    var mBlending = folder3.add(particleAttributes, 'blending', ["None", "Normal", "Additive"]).listen();
     mBlending.onChange(function(value) {
         particleAttributes.blending = value;
     });
@@ -299,32 +232,32 @@ MakeParticleSystem.prototype.setupFolder3 = function() {
         particleAttributes.sizeAttenuation = value;
     });
     var mrValueMin = folder3.add(particleAttributes, "rValueMin")
-        .min(0).max(1).step(.01).listen();
+        .min(0).max(100).step(1).listen();
     mrValueMin.onChange(function(value) {
         particleAttributes.rValueMin = value;
     });
     var mrValueMax = folder3.add(particleAttributes, "rValueMax")
-        .min(0).max(1).step(.01).listen();
+        .min(0).max(100).step(1).listen();
     mrValueMax.onChange(function(value) {
         particleAttributes.rValueMax = value;
     });
     var mgValueMin = folder3.add(particleAttributes, "gValueMin")
-        .min(0).max(1).step(.01).listen();
+        .min(0).max(100).step(1).listen();
     mgValueMin.onChange(function(value) {
         particleAttributes.gValueMin = value;
     });
     var mgValueMax = folder3.add(particleAttributes, "gValueMax")
-        .min(0).max(1).step(.01).listen();
+        .min(0).max(100).step(1).listen();
     mgValueMax.onChange(function(value) {
         particleAttributes.gValueMax = value;
     });
     var mbValueMin = folder3.add(particleAttributes, "bValueMin")
-        .min(0).max(1).step(.01).listen();
+        .min(0).max(100).step(1).listen();
     mbValueMin.onChange(function(value) {
         particleAttributes.bValueMin = value;
     });
     var mbValueMax = folder3.add(particleAttributes, "bValueMax")
-        .min(0).max(1).step(.01).listen();
+        .min(0).max(100).step(1).listen();
     mbValueMax.onChange(function(value) {
         particleAttributes.bValueMax = value;
     });
@@ -337,10 +270,13 @@ function addNewSystem(newSystem) {
     changeEditorDiv();
 }
 function removeOldSystem() {
-    var index = listOfSystems.indexOf(this);
+    var index = listOfSystems.indexOf(particleAttributes.currSystem);
     if(index > -1) {
         listOfSystems.splice(index, 1);
+    } else {
+        alert("couldnt find pSystem");
     }
+
     scene.remove(mesh);
     rebuildDropDown();
 
@@ -348,12 +284,33 @@ function removeOldSystem() {
 function initializeSystem(){
 
     var geometry = new THREE.Geometry();
+
     for (var i = 0; i < particleAttributes.numParticles; i ++ ) {
 
         var vertex = new THREE.Vector3();
-        vertex.x = (Math.random() * (particleAttributes.pPosXUpper - particleAttributes.pPosXLower))-(particleAttributes.pPosXUpper);
-        vertex.y = (Math.random() * (particleAttributes.pPosYUpper - particleAttributes.pPosYLower))-(particleAttributes.pPosYUpper);
-        vertex.z = (Math.random() * (particleAttributes.pPosZUpper - particleAttributes.pPosZLower))-(particleAttributes.pPosZUpper);
+        if ( particleAttributes.pPosXUpper < 0 ) {
+            vertex.x = (Math.random() * (particleAttributes.pPosXLower)) + particleAttributes.pPosXUpper;
+        } else if(particleAttributes.pPosXLower < 0) {
+            vertex.x = (Math.random() * (particleAttributes.pPosXUpper * 2)) + particleAttributes.pPosXLower;
+        } else {
+            vertex.x = (Math.random() * (particleAttributes.pPosXUpper)) + particleAttributes.pPosXLower;
+        }
+
+        if ( particleAttributes.pPosYUpper < 0 ) {
+            vertex.y = (Math.random() * (particleAttributes.pPosYLower)) + particleAttributes.pPosYUpper;
+        } else if(particleAttributes.pPosYLower < 0) {
+            vertex.y = (Math.random() * (particleAttributes.pPosYUpper*2)) + particleAttributes.pPosYLower;
+        } else {
+            vertex.y = (Math.random() * (particleAttributes.pPosYUpper)) + particleAttributes.pPosYLower;
+        }
+
+        if ( particleAttributes.pPosZUpper < 0 ) {
+            vertex.z = (Math.random() * (particleAttributes.pPosZLower)) + particleAttributes.pPosZUpper;
+        } else if(particleAttributes.pPosZLower < 0) {
+            vertex.z = (Math.random() * (particleAttributes.pPosZUpper*2)) + particleAttributes.pPosZLower;
+        } else {
+            vertex.z = (Math.random() * (particleAttributes.pPosZUpper)) + particleAttributes.pPosZLower;
+        }
 
         geometry.vertices.push( vertex );
 
@@ -362,11 +319,10 @@ function initializeSystem(){
     for(var i = 0; i < geometry.vertices.length; i++ ){
         colors[i] = new THREE.Color();
 
-        colors[i].setRGB((Math.random() * (particleAttributes.rValueMax-particleAttributes.rValueMin))-particleAttributes.rValueMin,
-                         (Math.random() * (particleAttributes.gValueMax-particleAttributes.gValueMin))-particleAttributes.gValueMin,
-                         (Math.random() * (particleAttributes.bValueMax-particleAttributes.bValueMin))-particleAttributes.bValueMin);
+        colors[i].setRGB((Math.random() * particleAttributes.rValueMax / 100) + particleAttributes.rValueMin / 100,
+                         (Math.random() * particleAttributes.gValueMax / 100) + particleAttributes.gValueMin / 100,
+                         (Math.random() * particleAttributes.bValueMax / 100) + particleAttributes.bValueMin / 100);
 
-        //colors[i].setRGB(Math.random(), Math.random(), Math.random());
     }
     geometry.colors = colors;
     var blendWith = THREE.NoBlending;
@@ -376,10 +332,6 @@ function initializeSystem(){
         blendWith = THREE.NormalBlending;
     } else if(particleAttributes.blending == "Additive") {
         blendWith = THREE.AdditiveBlending;
-    } else if(particleAttributes.blending == "Subtractive") {
-        blendWith = THREE.SubtractiveBlending;
-    } else if(particleAttributes.blending == "Multiplicative") {
-        blendWith = THREE.MultiplyBlending;
     }
     var pMaterial = new THREE.ParticleBasicMaterial({
         size: particleAttributes.size,
@@ -395,9 +347,6 @@ function initializeSystem(){
 
 
     var particles = new THREE.PointCloud(geometry, pMaterial);
-    //particles.rotation.x = Math.random() * 6;
-    //particles.rotation.y = Math.random() * 6;
-    //particles.rotation.z = Math.random() * 6;
 
     return particles;
 
