@@ -53,7 +53,6 @@ MakeParticleSystem.prototype.updateParticles = function() {
         this.particleGroup.rotation.x = time * (this.savedParameters.groupXrot/10);
         this.particleGroup.rotation.y = time * (this.savedParameters.groupYrot/10);
         this.particleGroup.rotation.z = time * (this.savedParameters.groupZrot/10);
-
     }
 };
 

@@ -286,6 +286,15 @@
         <script src="sketchCad.js"></script>
     </div>
     <div id="rightSideBarDiv">
+        <label>Select a Group</label>
+        <select id="groupList" style="width:100%">
+            <option value ="NotSelected">No Selected Group</option>
+        </select>
+        <button id ="newGroup" style="width:48%;margin-top:2.5%;">Create a Group</button>
+        <input type="text" id="groupName"style="width:48%;" value="Group Name" />
+        <button id ="addToGroup" style = "width:100%; padding: 5%; margin-top:2.5%; margin-bottom: 5%">Add Selected Element to Group</button>
+        <label>Selected Group's Elements</label>
+        <select id='currentGroupElements' size = "7" style="width:100%;margin-bottom: 4%"></select>
         <div id="editor2Div">
 
         </div>

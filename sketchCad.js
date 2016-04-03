@@ -29,6 +29,10 @@ var sceneSize = 10;
 
 var listOfSystems = [];
 
+var userGroupList = [];
+
+var selectedGroup = undefined;
+
 var clock = new THREE.Clock();
 //*************************************************************************************************
 //***************************************Required Three.js functions*******************************
@@ -209,12 +213,55 @@ function rebuildDropDown() {
         // default element
         if (scene.children[i].name != "default" && scene.children[i].name != "defaultLight") {
             // Creates the new option for the ddl based off the objects name
-            var option = document.createElement("option");
-            option.text = scene.children[i].name;
-            option.value = scene.children[i].name;
-            if (mesh != undefined && option.text == mesh.name) {
-                option.selected = true;
+            if(scene.children[i].userData == "Group"){
+                for(var j = 0; j < scene.children[i].children.length; j++)
+                {
+                    var option = document.createElement("option");
+                    option.text = scene.children[i].children[j].name;
+                    option.value = scene.children[i].children[j].name;
+                    if (mesh != undefined && option.text == mesh.name) {
+                        option.selected = true;
+                    }
+                    selectBox.add(option);
+                }
+            } else {
+                var option = document.createElement("option");
+                option.text = scene.children[i].name;
+                option.value = scene.children[i].name;
+                if (mesh != undefined && option.text == mesh.name) {
+                    option.selected = true;
+                }
+                selectBox.add(option);
             }
+        }
+    }
+}
+function updateGroupList() {
+    var selectBox = document.getElementById('groupList');
+    selectBox.options.length = 0;
+    var option = document.createElement("option");
+    option.text = "No Selected Group";
+    option.value = "NotSelected";
+    selectBox.add(option);
+    for (var i = 0; i < userGroupList.length; i++) {
+        option = document.createElement("option");
+        option.text = userGroupList[i].name;
+        option.value = userGroupList[i].name;
+        if(selectedGroup != undefined && selectedGroup.name == userGroupList[i].name) {
+            option.selected = true;
+        }
+        selectBox.add(option);
+    }
+    updateSelectedGroupElementList();
+}
+function updateSelectedGroupElementList() {
+    var selectBox = document.getElementById('currentGroupElements');
+    selectBox.options.length = 0;
+    if(selectedGroup != undefined) {
+        for (var i = 0; i < selectedGroup.children.length; i++) {
+            var option = document.createElement("option");
+            option.text = selectedGroup.children[i].name;
+            option.value = selectedGroup.children[i].name;
             selectBox.add(option);
         }
     }
@@ -294,6 +341,7 @@ function onMouseClick(event) {
     var raycaster = new THREE.Raycaster();
     // The vector for the mouse coordinates
     var mouseVector = new THREE.Vector2();
+    var found = false;
     // Prevents the normal browser clicking event from being processed
     event.preventDefault();
     // Calculates the mouse position on the canvas
@@ -310,6 +358,7 @@ function onMouseClick(event) {
         for (var i = 0; i < document.getElementById("meshSelector").length; i++) {
             if (document.getElementById("meshSelector").options[i].value == intersects[0].object.name) {
                 document.getElementById("meshSelector").options[i].selected = true;
+                found = true;
                 break;
             }
         }
@@ -321,7 +370,22 @@ function onMouseClick(event) {
             selectedFace = intersects[0].face;
             displayFaceEditor(selectedFace);
         }
-
+    }
+    if (found == false) {
+        for(var i = 0; i < userGroupList.length; i++) {
+            intersects = raycaster.intersectObjects(userGroupList[i].children);
+            if (intersects.length > 0) {
+                // Selects the first intersection
+                for (var i = 0; i < document.getElementById("meshSelector").length; i++) {
+                    if (document.getElementById("meshSelector").options[i].value == intersects[0].object.name) {
+                        document.getElementById("meshSelector").options[i].selected = true;
+                        found = true;
+                        break;
+                    }
+                }
+                changeEditorDiv();
+            }
+        }
     }
     /*else {
      // Nothing was intersected so the editors are cleared
@@ -428,7 +492,6 @@ function generateMesh() {
         localMesh = new THREE.Mesh(geometry, material);
         localMesh.geometry.dynamic = true;
         localMesh.name = document.getElementById('shapeSelector').value + id;
-
         id++;
         scene.add(localMesh);
         mesh = localMesh;
@@ -456,6 +519,34 @@ function addEventListeners() {
     document.getElementById('meshSelector').onchange = function () {
         changeEditorDiv();
     };
+    // Adds a group with the name in the groupName field
+    document.getElementById('newGroup').onclick = function () {
+        var newGroup = new THREE.Object3D();
+        newGroup.name = document.getElementById('groupName').value;
+        newGroup.userData = "Group";
+        scene.add(newGroup);
+        userGroupList.push(newGroup);
+        selectedGroup = newGroup;
+        updateGroupList();
+    };
+
+    document.getElementById('addToGroup').onclick = function () {
+        var check = userGroupList.indexOf(selectedGroup);
+        if( check >= 0 && mesh != undefined ) {
+            selectedGroup.add(mesh);
+            updateSelectedGroupElementList();
+        }
+    };
+    document.getElementById('groupList').onclick = function( ) {
+        if(document.getElementById('groupList').value != "NotSelected") {
+            selectedGroup = scene.getObjectByName(document.getElementById('groupList').value);
+        } else {
+            selectedGroup = undefined;
+        }
+        updateGroupList();
+        updateSelectedGroupElementList();
+    };
+
 // Save scene
     document.getElementById('save_butt').onclick = function () {
         var r = window.confirm("SketchCad currently does not support saving of particle systems. These " +
