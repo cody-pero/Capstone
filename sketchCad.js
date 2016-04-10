@@ -550,60 +550,11 @@ function addEventListeners() {
 // Save scene
     document.getElementById('save_butt').onclick = function () {
         var r = window.confirm("SketchCad currently does not support saving of particle systems. These " +
-            "items will cause issues when saving. Continue?");
+            "items will cause issues when exporting. Continue?");
         if(r){
             var retval = prompt("Please enter a filename: ");
-            var filename = retval;
-            var exporter = new THREE.SceneExporter();
-            var sceneJson = JSON.stringify(exporter.parse(scene));
-            localStorage.setItem('scene', sceneJson);
-            var pom = document.createElement('a');
-            pom.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(sceneJson));
-            pom.setAttribute('download', filename);
-            //create_default_lights();
-            if (document.createEvent) {
-                var event = document.createEvent('MouseEvents');
-                event.initEvent('click', true, true);
-                pom.dispatchEvent(event);
-            }
-            else {
-                pom.click();
-            }
+            saveSTL(scene, retval);
         }
     };
 
-    function readSingleFile(evt) {
-        //Retrieve the first (and only!) File from the FileList object
-        var f = evt.target.files[0];
-
-        if (f) {
-            var r = new FileReader();
-            r.onload = function(e) {
-                var contents = e.target.result;
-                var sceneLoader = new THREE.SceneLoader();
-                sceneLoader.parse(JSON.parse(contents), function (e) {
-                    scene = e.scene;
-                }, '.');
-                rebuildDropDown();
-                addGrid();
-                var SCREEN_WIDTH = container.clientWidth, SCREEN_HEIGHT = container.clientHeight;
-                var VIEW_ANGLE = 2, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 1, FAR = 20000;
-                camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
-                camera.name = "Camera";
-                scene.add(camera);
-                camera.position.set(400, 400, 400);
-
-                // Camera Controls
-                controls = new THREE.OrbitControls(camera, renderer.domElement);
-                addEventListeners();
-                THREEx.WindowResize(renderer, camera);
-
-            };
-            r.readAsText(f);
-        } else {
-            alert("Failed to load file");
-        }
-    }
-
-    document.getElementById('fileinput').addEventListener('change', readSingleFile, false);
 }
