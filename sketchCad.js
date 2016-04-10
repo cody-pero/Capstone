@@ -48,6 +48,8 @@ function init() {
     faceEditor = $("#editor2Div");
     // Camera / container / renderer settings
     container = document.getElementById("WebGLCanvas");
+
+
     var SCREEN_WIDTH = container.clientWidth, SCREEN_HEIGHT = container.clientHeight;
     var VIEW_ANGLE = 2, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 1, FAR = 20000;
     camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
@@ -173,23 +175,77 @@ function update() {
         mode = "explode";
         alert("exploded");
     } else if (keyboard.up("up")) {
-        mesh.position.y += 1;
-        moveHighlighter();
+        if(selectedGroup != undefined && selectedGroup.name != "No Selected Group") {
+            for(var i = 0; i < selectedGroup.children.length; i++) {
+                mesh = selectedGroup.children[i];
+                mesh.position.y += 1;
+            }
+            cleanupGroupHighlighter();
+            createGroupHighlighter();
+        }else {
+            mesh.position.y += 1;
+            moveHighlighter();
+        }
     } else if (keyboard.up("down")) {
-        mesh.position.y -= 1;
-        moveHighlighter();
+        if(selectedGroup != undefined && selectedGroup.name != "No Selected Group") {
+            for (var i = 0; i < selectedGroup.children.length; i++) {
+                mesh = selectedGroup.children[i];
+                mesh.position.y -= 1;
+            }
+            cleanupGroupHighlighter();
+            createGroupHighlighter();
+        }else {
+            mesh.position.y -= 1;
+            moveHighlighter();
+        }
     } else if (keyboard.up("left")) {
-        mesh.position.x -= 1;
-        moveHighlighter();
+        if(selectedGroup != undefined && selectedGroup.name != "No Selected Group") {
+            for (var i = 0; i < selectedGroup.children.length; i++) {
+                mesh = selectedGroup.children[i];
+                mesh.position.x -= 1;
+            }
+            cleanupGroupHighlighter();
+            createGroupHighlighter();
+        }else {
+            mesh.position.x -= 1;
+            moveHighlighter();
+        }
     } else if (keyboard.up("right")) {
-        mesh.position.x += 1;
-        moveHighlighter();
+        if(selectedGroup != undefined && selectedGroup.name != "No Selected Group") {
+            for (var i = 0; i < selectedGroup.children.length; i++) {
+                mesh = selectedGroup.children[i];
+                mesh.position.x += 1;
+            }
+            cleanupGroupHighlighter();
+            createGroupHighlighter();
+        }else {
+            mesh.position.x += 1;
+            moveHighlighter();
+        }
     } else if (keyboard.up("pageup")) {
-        mesh.position.z += 1;
-        moveHighlighter();
+        if(selectedGroup != undefined && selectedGroup.name != "No Selected Group") {
+            for (var i = 0; i < selectedGroup.children.length; i++) {
+                mesh = selectedGroup.children[i];
+                mesh.position.z += 1;
+            }
+            cleanupGroupHighlighter();
+            createGroupHighlighter();
+        }else {
+            mesh.position.z += 1;
+            moveHighlighter();
+        }
     } else if (keyboard.up("pagedown")) {
-        mesh.position.z -= 1;
-        moveHighlighter();
+        if(selectedGroup != undefined && selectedGroup.name != "No Selected Group") {
+            for (var i = 0; i < selectedGroup.children.length; i++) {
+                mesh = selectedGroup.children[i];
+                mesh.position.z -= 1;
+            }
+            cleanupGroupHighlighter();
+            createGroupHighlighter();
+        }else {
+            mesh.position.z -= 1;
+            moveHighlighter();
+        }
     }
     if (keyboard.up("p")) {
         mode = "picking";
@@ -327,7 +383,6 @@ function changeEditorDiv() {
         displayLightToolbar();
     } else if (mesh.geometry instanceof THREE.Geometry) {
         createHighlighter();
-        showHighlighter();
         editor.empty();
         displayGeometryToolbar();
     } else if (mesh instanceof THREE.Camera) {
@@ -540,8 +595,11 @@ function addEventListeners() {
     document.getElementById('groupList').onclick = function( ) {
         if(document.getElementById('groupList').value != "NotSelected") {
             selectedGroup = scene.getObjectByName(document.getElementById('groupList').value);
+            cleanupHighlighter();
+            createGroupHighlighter();
         } else {
             selectedGroup = undefined;
+            cleanupGroupHighlighter();
         }
         updateGroupList();
         updateSelectedGroupElementList();

@@ -3,9 +3,7 @@
  */
 // default settings for the particles mostly 0 for anything that causes it to move, and a small
 // cube pattern to the randomization of vertices
-var particleAttributes = {
-
-};
+var particleAttributes = {};
 
 function MakeParticleSystem( ) {
     this.savedParameters = undefined;

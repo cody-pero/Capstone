@@ -7,8 +7,7 @@ var outlineMesh;
 // the out line objects material
 var outLineMaterial;
 
-// whether or not the highlighter is being displayed
-var highlighted = false;
+
 
 // returns the state of the highlighter
 function returnState() {
@@ -30,17 +29,9 @@ function createHighlighter() {
     outlineMesh.rotation.y = mesh.rotation.y;
     outlineMesh.rotation.z = mesh.rotation.z;
     scene.add(outlineMesh);
-    highlighted = true;
+
 }
 
-// displays the highlighter
-function showHighlighter() {
-    outlineMesh.visible = true;
-}
-// hides the highlighter
-function hideHighlighter() {
-    outlineMesh.visible = false;
-}
 // moves the highlighter to the new position of the mesh
 function moveHighlighter() {
     outlineMesh.position.x = mesh.position.x;
@@ -61,8 +52,6 @@ function rescaleHighlighter() {
 
 // deletes the highlighter from the scene
 function cleanupHighlighter() {
-    highlighted = false;
     scene.remove(outlineMesh);
-
 }
 
