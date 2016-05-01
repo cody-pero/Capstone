@@ -1,15 +1,15 @@
 /**
+ * Functions for adjusting values of the lights
  * Created by Charlie on 3/5/2016.
  */
-/**
- * Functions for adjusting values of the geometric meshes, Cube, cylinder, plane, sphere
- */
+
 // The List of values being tracked.
 var lightParam;
 // User interface for interacting with tracked javascript variables
 var lightGui;
-
+// wireframe helper for the lights
 var lightHelper;
+
 // Builds the dat.gui dom element for the selected mesh
 function displayLightToolbar() {
     var sphereSize = 1;
@@ -35,6 +35,8 @@ function displayLightToolbar() {
     lightGui.open();
     editor.append(lightGui.domElement);
 }
+
+// Initializes the parameter list depending on which light is selected
 function generateLightParamList() {
     lightParam = {
         light_color : mesh.color.getHex()
@@ -83,11 +85,15 @@ function generateLightParamList() {
         folderLightAttributes();
      }
 }
+
+// used to update shadows but never got it really working
 function updateShadows() {
     mesh.shadowCamera.updateProjectionMatrix();
     console.log(mesh);
     console.log(mesh.shadowCamera);
 }
+
+// builds the base part of the toolbar ( similar in all lights )
 function buildBaseToolbar() {
     var meshColor = lightGui.addColor(lightParam, 'light_color')
         .name('Light color').listen();
@@ -97,6 +103,7 @@ function buildBaseToolbar() {
     });
 }
 
+// attaches the shadow attributes folder to the gui
 function folderShadowAttributes() {
     var folder1 = lightGui.addFolder("Shadow Attributes");
     var shadowEnabled = folder1.add(lightParam, 'shadowEnabled').name('Enable Shadows').listen();
@@ -161,6 +168,8 @@ function folderShadowAttributes() {
     });
 
 }
+
+// Attaches the light attributes folder to the gui
 function folderLightAttributes() {
     var folder1 = lightGui.addFolder("Light Attributes");
     var lightIntensity = folder1.add(lightParam, 'intensityValue')
@@ -186,6 +195,7 @@ function folderLightAttributes() {
      */
 }
 
+// Attaches the position folder to the gui
 function folderPos() {
     var folder1 = lightGui.addFolder('Position');
     var meshX_Pos = folder1.add(lightParam, 'X_Position')
@@ -205,6 +215,8 @@ function folderPos() {
     });
 
 }
+
+// Forces an update on all the materials in the scene to reflect changes to the light
 function updateMaterials() {
     var count = 0;
 

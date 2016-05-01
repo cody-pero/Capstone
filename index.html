@@ -1,9 +1,15 @@
+<!--
+ Sketch Cad html page
+ @author Charles Hreha
+ @author Cody Pero
+-->
 <!DOCTYPE html>
 <html>
 <head>
     <title>
-        Some Title
+        Sketch-CAD
     </title>
+    <!-- Linking scripts -->
     <meta name="viewport" content="width = 640, height = 480, initial-scale = 1">
     <link rel="stylesheet" type="text/css" href="mainStyle.css">
     <script src="three.min.js"></script>
@@ -20,6 +26,7 @@
     <script src="ParticleController.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="LightToolbar.js"></script>
+    <!-- Script for disabling keys, used to stop arrows from moving selected fields -->
     <script language ="javascript">
         function disableKeys() {
             document.onkeydown = function () {
@@ -33,6 +40,7 @@
 
         }
     </script>
+    <!-- Script for the scene size slider -->
     <script type ="text/javascript">
         function updateSlider(slideAmount) {
             var slideVal = $("#currSize");
@@ -44,14 +52,17 @@
 
 <body>
 <div id="containerDiv">
+    <!-- Top of window -->
     <div id="titleBarDiv">
         Sketch-CAD
     </div>
+    <!-- Right below the titleBarDiv -->
     <div id="menuBarDiv">
         <button id="save_butt">Save</button>
         <button id="show_grid">Show Grid</button>
         <button id="hide_grid">Hide Grid</button>
     </div>
+    <!-- Left side bar containing mesh selector and editor -->
     <div id="leftSideBarDiv">
         <label>Select Element to Add</label>
         <select id='shapeSelector' style="width:100%" onclick ="return disableKeys()">
@@ -75,24 +86,30 @@
         <select id="meshSelector" size="4" onclick ="return disableKeys()">
 
         </select>
-
+        <!-- Section for the mesh controls -->
         <div id="editorDiv">
 
         </div>
     </div>
+    <!-- Actual WebGL Canvas -->
     <div id="WebGLCanvas">
         <script src="sketchCad.js"></script>
     </div>
+    <!-- Right side bar containing group/face controls -->
     <div id="rightSideBarDiv">
         <label>Select a Group</label>
         <select id="groupList" style="width:100%" onclick ="return disableKeys()">
             <option value ="NotSelected">No Selected Group</option>
         </select>
         <button id ="newGroup" style="width:48%;margin-top:2.5%;">Create a Group</button>
-        <input type="text" id="groupName"style="width:48%;" value="Group Name" onclick ="return disableKeys()"/>
-        <button id ="addToGroup" style = "width:100%; padding: 5%; margin-top:2.5%; margin-bottom: 5%">Add Selected Element to Group</button>
+        <input type="text" id="groupName"style="width:48%;" value="Group Name"
+               onclick ="return disableKeys()"/>
+        <button id ="addToGroup" style = "width:100%; padding: 5%; margin-top:2.5%;
+               margin-bottom: 5%">Add Selected Element to Group</button>
         <label>Selected Group's Elements</label>
-        <select id='currentGroupElements' size = "7" style="width:100%;margin-bottom: 4%"onclick ="return disableKeys()"></select>
+        <select id='currentGroupElements' size = "7" style="width:100%;margin-bottom: 4%"
+                onclick ="return disableKeys()"></select>
+        <!-- Section for the face controls -->
         <div id="editor2Div">
 
         </div>

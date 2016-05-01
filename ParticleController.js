@@ -1,10 +1,11 @@
 /**
- * Created by Charlie on 2/16/2016.
+ * Functions pertaining to the particle systems
+ * @author Charlie on 2/16/2016.
  */
-// default settings for the particles mostly 0 for anything that causes it to move, and a small
-// cube pattern to the randomization of vertices
+// Gui parameter settings list
 var particleAttributes = {};
 
+// Constructor that makes a particle system object
 function MakeParticleSystem( ) {
     this.savedParameters = undefined;
     this.particleGUI = undefined;
@@ -12,13 +13,17 @@ function MakeParticleSystem( ) {
     particleAttributes.currSystem = this;
 
 }
+
+// method of the system object that saves the Gui parameter list to the object
 MakeParticleSystem.prototype.saveParameters = function( otherSavedParams ) {
     this.savedParameters = otherSavedParams;
     this.savedParameters.currSystem = this;
 
 }
-/* Further Testing required but works with multiple systems */
+
+// method used by render to update the locations of particles in the system
 MakeParticleSystem.prototype.updateParticles = function() {
+    var scaleIt = 10;
     if(this.savedParameters != undefined) {
         var time = 4 * clock.getElapsedTime();
         var vertices = this.particleGroup.geometry.vertices;
@@ -27,9 +32,9 @@ MakeParticleSystem.prototype.updateParticles = function() {
         for (var i = 0; i < vertices.length; i++) {
             // Moves the vertices by there velocity
             var v = vertices[i];
-            v.y = v.y - (this.savedParameters.pVelY/10);
-            v.x = v.x - (this.savedParameters.pVelX/10);
-            v.z = v.z - (this.savedParameters.pVelZ/10);
+            v.y = v.y - (this.savedParameters.pVelY / scaleIt);
+            v.x = v.x - (this.savedParameters.pVelX / scaleIt);
+            v.z = v.z - (this.savedParameters.pVelZ / scaleIt);
 
             // Keeps the vertices contained in user specified region
             if (v.y <= this.savedParameters.pPosYLower) {
@@ -48,18 +53,22 @@ MakeParticleSystem.prototype.updateParticles = function() {
                 v.z = this.savedParameters.pPosZLower;
             }
         }
-        this.particleGroup.rotation.x = time * (this.savedParameters.groupXrot/10);
-        this.particleGroup.rotation.y = time * (this.savedParameters.groupYrot/10);
-        this.particleGroup.rotation.z = time * (this.savedParameters.groupZrot/10);
+        // rotates the particles by the rotation value
+        this.particleGroup.rotation.x = time * (this.savedParameters.groupXrot / scaleIt);
+        this.particleGroup.rotation.y = time * (this.savedParameters.groupYrot / scaleIt);
+        this.particleGroup.rotation.z = time * (this.savedParameters.groupZrot / scaleIt);
     }
 };
 
+// method that displays the gui for the system and appends it to the editor pane
 MakeParticleSystem.prototype.displayGUI = function() {
     this.particleGUI = new dat.GUI({"width": document.getElementById('editorDiv').clientWidth});
     this.makeGUI();
     this.particleGUI.open();
     editor.append(this.particleGUI.domElement);
 };
+
+// method that builds the gui folders and object
 MakeParticleSystem.prototype.makeGUI = function() {
     var obj = {Name: mesh.name};
     this.particleGUI.add(obj, 'Name');
@@ -96,6 +105,7 @@ MakeParticleSystem.prototype.makeGUI = function() {
     editor.append(this.particleGUI.domElement);
 };
 
+// Makes folder 1, contains position boundaries and velocity settings
 MakeParticleSystem.prototype.setupFolder1 = function() {
     var folder1 = this.particleGUI.addFolder('Particle Settings');
 //________________________________________Velocity
@@ -159,6 +169,8 @@ MakeParticleSystem.prototype.setupFolder1 = function() {
         particleAttributes.pPosZUpper = value;
     });
 };
+
+// Builds folder 2 controlling emitter settings such as number of particles and rotation
 MakeParticleSystem.prototype.setupFolder2 = function() {
     var folder2 = this.particleGUI.addFolder('Emitter Settings');
     // Controls the number of particles in the system
@@ -192,6 +204,8 @@ MakeParticleSystem.prototype.setupFolder2 = function() {
 
 
 };
+
+// Method for setting up the materials folder
 MakeParticleSystem.prototype.setupFolder3 = function() {
     var folder3 = this.particleGUI.addFolder('Material Settings');
 
@@ -259,6 +273,8 @@ MakeParticleSystem.prototype.setupFolder3 = function() {
         particleAttributes.bValueMax = value;
     });
 }
+
+// Adds a new particle system to the list of particle systems and adds it to the scene
 function addNewSystem(newSystem) {
     listOfSystems.push(newSystem);
     scene.add(newSystem.particleGroup);
@@ -266,6 +282,8 @@ function addNewSystem(newSystem) {
     mesh = newSystem.particleGroup;
     changeEditorDiv();
 }
+
+// Removes a particle system from the list and scene
 function removeOldSystem() {
     var index = listOfSystems.indexOf(particleAttributes.currSystem);
     if(index > -1) {
@@ -278,6 +296,8 @@ function removeOldSystem() {
     rebuildDropDown();
 
 }
+
+// Initializes the particles initial settings
 function initializeSystem(){
 
     var geometry = new THREE.Geometry();

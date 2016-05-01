@@ -1,5 +1,6 @@
 /**
  * Functions for adding a grid to the scene
+ * @author Charles Hreha
  */
 // holds the line objects for the grid for hiding/showing
 var grid = [];

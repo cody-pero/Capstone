@@ -1,11 +1,9 @@
 /**
- * Created by Charlie on 4/10/2016.
- */
-/**
- * Functions for manipulating the mesh highlight feature
+ * Functions for manipulating the group highlight feature
+ * Created by Charlie on 4/10/2016
  */
 
-// the out line mesh object
+// the list of outline meshes being manipulated
 var selectedGroupOutlineMeshes = [];
 // the out line objects material
 

@@ -1,4 +1,6 @@
 /**
+ * Used to keep track of keyboard key events
+ *
  * @author Lee Stemkoski
  *
  * Usage:
@@ -13,7 +15,7 @@
  *
  *  See KeyboardState.k object data below for names of keys whose state can be polled
  *
- *  Used to keep track of keyboard key events
+ *
  */
 
 // initialization

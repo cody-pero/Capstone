@@ -1,5 +1,6 @@
 /**
  * Functions for manipulating the mesh highlight feature
+ * @author Charles Hreha
  */
 
 // the out line mesh object

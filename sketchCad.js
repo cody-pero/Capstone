@@ -1,5 +1,7 @@
 /**
  * Creates the starting scene and listens for user input and changes to manipulate the scene
+ * @author Charles Hreha
+ * @author Cody Pero
  **/
 // Makes sure to call the init / render functions before ANY other functions on the page. Safety
 $(function () {
@@ -108,7 +110,7 @@ function init() {
     THREEx.WindowResize(renderer, camera);
 }
 
-
+// function for adding a floor to the scene
 function createFloor() {
     var floorTexture = new THREE.ImageUtils.loadTexture('images/checkerboard.jpg');
     floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
@@ -135,6 +137,7 @@ function render() {
     update();
 }
 // Update function used to update camera controls and trigger on keyboard input events
+// Its more than 40 lines but its just a serious of checks for which key is pressed
 function update() {
     for (var index = 0; index < listOfSystems.length; index++) {
         listOfSystems[index].updateParticles();
@@ -292,6 +295,7 @@ function rebuildDropDown() {
         }
     }
 }
+// Function for updating the group list name drop down
 function updateGroupList() {
     var selectBox = document.getElementById('groupList');
     selectBox.options.length = 0;
@@ -310,6 +314,7 @@ function updateGroupList() {
     }
     updateSelectedGroupElementList();
 }
+// Function for updating the selected group elements drop down
 function updateSelectedGroupElementList() {
     var selectBox = document.getElementById('currentGroupElements');
     selectBox.options.length = 0;
@@ -455,6 +460,7 @@ function onMouseClick(event) {
 //**************************************************************************************************
 //******************************Stuff that makes the buttons work***********************************
 
+// Generates a new element depending on what is selected in the mesh selector drop down list
 function generateMesh() {
     var geometry, localMesh, material, newLight;
     if (document.getElementById('shapeSelector').value == 'Point Light') {
@@ -585,6 +591,7 @@ function addEventListeners() {
         updateGroupList();
     };
 
+    // Adds an element to a group
     document.getElementById('addToGroup').onclick = function () {
         var check = userGroupList.indexOf(selectedGroup);
         if( check >= 0 && mesh != undefined ) {
@@ -592,6 +599,7 @@ function addEventListeners() {
             updateSelectedGroupElementList();
         }
     };
+    // What happens when a group is selected
     document.getElementById('groupList').onclick = function( ) {
         if(document.getElementById('groupList').value != "NotSelected") {
             selectedGroup = scene.getObjectByName(document.getElementById('groupList').value);
